@@ -1,11 +1,12 @@
 const express = require('express')
 const {sequelize} = require('./database/models')
 const Userrouter = require('./users/userController')
+const Commentrouter = require('./comment/commentController')
 const app = express()
 
 app.use(express.json())
 app.use('/users',Userrouter)
-
+app.use('/comment',Commentrouter)
 app.listen(3001, async ()=>{
    console.log('Server is running')
    await sequelize.authenticate()
