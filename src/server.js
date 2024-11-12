@@ -1,12 +1,17 @@
 const express = require('express')
 const {sequelize} = require('./database/models')
-const Userrouter = require('./users/userController')
-const Commentrouter = require('./comment/commentController')
+const cookieParser = require('cookie-parser')
+const verifyJWT = require('./middleware/verifyJWT')
 const app = express()
 
 app.use(express.json())
-app.use('/users',Userrouter)
-app.use('/comment',Commentrouter)
+app.use(cookieParser())
+
+app.use('/auth', require('./users/controllers/authController'))
+app.use(verifyJWT)
+app.use('/user', require('./users/controllers/usercontroller'))
+
+
 app.listen(3001, async ()=>{
    console.log('Server is running')
    await sequelize.authenticate()
