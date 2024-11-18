@@ -7,9 +7,9 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/auth', require('./users/controllers/authController'))
+app.use('/auth', require('./routes/auth.route'))
 app.use(verifyJWT)
-app.use('/user', require('./users/controllers/usercontroller'))
+app.use('/user', require('./routes/user.route'))
 
 
 app.listen(3001, async ()=>{
