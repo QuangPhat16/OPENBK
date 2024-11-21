@@ -1,15 +1,15 @@
 const express = require('express')
 const router = express.Router()
-//const User = require('../database/models/userModel')
-const DB = require('../database/models')
+//const User = require('../database/models/user.model')
+const DB = require('../../database/models')
 const User = DB.User
-const { userUpdateValidations } = require('../controllers/users/userDTO')  // Validation middleware
+const { userUpdateValidations } = require('../../controllers/users/userDTO')  // Validation middleware
 
 const {
    getUserInfo,
    updateUserInfo,
    updateCollabPrivilege
-} = require('../controllers/users/userController')
+} = require('../../controllers/users/user.controller')
 
 router.get('/', async(req, res)=>{
    try{

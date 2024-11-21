@@ -4,7 +4,8 @@
     "password": "postgres123",
     "database": "opbk",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
   },
   "test": {
     "username": "root",

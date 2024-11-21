@@ -1,7 +1,5 @@
-// controllers/userController.js
-const DB = require('../../database/models')
+const { User } = require('../../database/models')
 const bcrypt = require('bcrypt')
-const User = DB.User
 
 //get user info
 const getUserInfo = async (req, res) => {

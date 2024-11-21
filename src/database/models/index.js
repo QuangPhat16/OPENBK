@@ -17,7 +17,15 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-const Comment = require('./commentModel')(sequelize, Sequelize.DataTypes);
+const Comment = require('./comment.model')(sequelize, Sequelize.DataTypes);
+const Course  = require('./course.model')(sequelize, Sequelize.DataTypes);
+const Unit = require('./unit.model')(sequelize, Sequelize.DataTypes);
+const Question = require('./question.model')(sequelize, Sequelize.DataTypes);
+const User = require('./user.model')(sequelize, Sequelize.DataTypes);
+db.User = User;
+db.Course = Course;
+db.Unit = Unit;
+db.Question = Question;
 db.Comment = Comment;
 fs
   .readdirSync(__dirname)

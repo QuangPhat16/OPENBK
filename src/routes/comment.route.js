@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const commentController = require('../controllers/comment/commentController');
+const commentController = require('../controllers/comment/comment.controller');
 
 router.post('/comments', async (req, res) => {
   try {
