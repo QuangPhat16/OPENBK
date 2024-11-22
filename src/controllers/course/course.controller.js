@@ -12,22 +12,21 @@ const CourseController = {
   },
 
   async getAllCourses(req, res) {
-    try {
-        const course = await Course.findByPk(id)
-        if (!course) return res.status(404).json({ message: 'Course not found' })
-        return res.json(course)
-    } catch (err) {
-        console.log(`${err}`)
-        return res.status(500).json({ error: err.message })
+    try{
+      const response = await Course.findAll()
+      res.json(response)
+    }
+    catch(err){
+        res.status(500).json(err)
     }
   },
 
   async getCourseById(req, res) {
     try {
+      console.log(req)
       const { id } = req.params;
-      const course = await Course.findByPk(id, {
-        include: [{ model: Unit, as: 'units' }],
-      });
+      if (isNaN(parseInt(id))) return res.status(400).json({ error: 'Id must be a number' });
+      const course = await Course.findByPk(id);
       if (!course) return res.status(404).json({ error: 'Course not found' });
       res.status(200).json(course);
     } catch (error) {
@@ -38,6 +37,7 @@ const CourseController = {
   async updateCourse(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(parseInt(id))) return res.status(400).json({ error: 'Id must be a number' });
       const { courseName, description } = req.body;
       const updated = await Course.update(
         { courseName, description },
@@ -53,6 +53,7 @@ const CourseController = {
   async deleteCourse(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(parseInt(id))) return res.status(400).json({ error: 'Id must be a number' });
       const deleted = await Course.destroy({ where: { courseId: id } });
       if (!deleted) return res.status(404).json({ error: 'Course not found' });
       res.status(200).json({ message: 'Course deleted successfully' });

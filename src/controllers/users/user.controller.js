@@ -15,6 +15,28 @@ const getUserInfo = async (req, res) => {
    }
 }
 
+const getAllUsers = async(req, res)=>{
+   try{
+      const user = await User.findAll()
+      res.json(user)
+   }
+   catch(err){
+      res.status(500).json(err)
+   }
+}
+
+const createUser = async(req, res)=>{
+   const {name, email, role, password} = req.body
+   try{
+      const user = await User.create({name, email, role, password})
+      res.json({message:'Created user successfully',user})
+   }
+   catch(err){
+      console.error(err);
+      res.status(500).json({ error: err.message });
+   }
+}
+
 //User change their info
 //Still cannot validate input
 const updateUserInfo = async (req, res) => {
@@ -48,6 +70,8 @@ const updateCollabPrivilege = async (req, res) => {
 
 module.exports = {
    getUserInfo,
+   getAllUsers,
+   createUser,
    updateUserInfo,
    updateCollabPrivilege
 }
