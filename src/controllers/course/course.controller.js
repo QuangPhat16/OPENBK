@@ -13,12 +13,12 @@ const CourseController = {
 
   async getAllCourses(req, res) {
     try {
-      const courses = await Course.findAll({
-        include: [{ model: Unit, as: 'units' }], 
-      });
-      res.status(200).json(courses);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+        const course = await Course.findByPk(id)
+        if (!course) return res.status(404).json({ message: 'Course not found' })
+        return res.json(course)
+    } catch (err) {
+        console.log(`${err}`)
+        return res.status(500).json({ error: err.message })
     }
   },
 
