@@ -17,6 +17,7 @@ node_modules/
 # Ignore các file nhạy cảm như keys, passwords
 *.pem
 *.key
+.env
 
 # Ignore các thư mục và file tạm thời
 *.tmp
