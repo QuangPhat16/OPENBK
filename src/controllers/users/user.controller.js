@@ -1,7 +1,5 @@
-// controllers/userController.js
-const DB = require('../../database/models')
+const { User } = require('../../database/models')
 const bcrypt = require('bcrypt')
-const User = DB.User
 
 //get user info
 const getUserInfo = async (req, res) => {
@@ -14,6 +12,28 @@ const getUserInfo = async (req, res) => {
    } catch (err) {
       console.log(`${err}`)
       return res.status(500).json({ error: err.message })
+   }
+}
+
+const getAllUsers = async(req, res)=>{
+   try{
+      const user = await User.findAll()
+      res.json(user)
+   }
+   catch(err){
+      res.status(500).json(err)
+   }
+}
+
+const createUser = async(req, res)=>{
+   const {name, email, role, password} = req.body
+   try{
+      const user = await User.create({name, email, role, password})
+      res.json({message:'Created user successfully',user})
+   }
+   catch(err){
+      console.error(err);
+      res.status(500).json({ error: err.message });
    }
 }
 
@@ -50,6 +70,8 @@ const updateCollabPrivilege = async (req, res) => {
 
 module.exports = {
    getUserInfo,
+   getAllUsers,
+   createUser,
    updateUserInfo,
    updateCollabPrivilege
 }

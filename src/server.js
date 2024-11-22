@@ -3,13 +3,14 @@ const {sequelize} = require('./database/models')
 const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT')
 const app = express()
+const authRoutes = require('./routes/auth/auth.route');
 
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/auth', require('./routes/auth.route'))
-app.use(verifyJWT)
-app.use('/user', require('./routes/user.route'))
+app.use('/auth', authRoutes)
+// app.use(verifyJWT)
+app.use('/', require('./routes'))
 
 
 app.listen(3001, async ()=>{
