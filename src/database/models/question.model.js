@@ -33,6 +33,10 @@ module.exports = (sequelize) => {
       },
       allowNull: false,
     },
+    correctAnswer: {
+      type: DataTypes.ENUM('A', 'B', 'C', 'D'),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Question',
