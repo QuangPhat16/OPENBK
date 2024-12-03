@@ -47,4 +47,5 @@ module.exports = (sequelize) => {
         modelName: 'Test',
     });
 
+    return Test;
 };

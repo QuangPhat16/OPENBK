@@ -22,13 +22,13 @@ const Course  = require('./course.model')(sequelize, Sequelize.DataTypes);
 const Unit = require('./unit.model')(sequelize, Sequelize.DataTypes);
 const Question = require('./question.model')(sequelize, Sequelize.DataTypes);
 const User = require('./user.model')(sequelize, Sequelize.DataTypes);
-const Test = require('./test.model')(sequelize, Sequelize.DataTypes);
+// const Test = require('./test.model')(sequelize, Sequelize.DataTypes);
 db.User = User;
 db.Course = Course;
 db.Unit = Unit;
 db.Question = Question;
 db.Comment = Comment;
-db.Test = Test;
+// db.Test = Test;
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -40,6 +40,7 @@ fs
     );
   })
   .forEach(file => {
+    if(file === "test.model.js") return;
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
