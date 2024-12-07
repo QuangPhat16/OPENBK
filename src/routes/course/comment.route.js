@@ -1,37 +1,50 @@
 const express = require('express');
 const router = express.Router();
-const commentController = require('../controllers/comment/comment.controller');
+const {createComment, getComments, getSubComments, deleteComment, updateComment} = require('../../controllers/comment/commentController');
 
-router.post('/comments', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    await commentController.createComment(req, res);
+    await createComment(req, res);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-router.get('/comments', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    await commentController.getComments(req, res);
+    await getComments(req, res);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-router.put('/comments/:id', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    await commentController.updateComment(req, res);
+    await getSubComments(req, res);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-router.delete('/comments/:id', async (req, res) => {
+router.put('/', async (req, res) => {
   try {
-    await commentController.deleteComment(req, res);
+    await updateComment(req, res);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete('/', async (req, res) => {
+  try {
+    await deleteComment(req, res);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

@@ -3,15 +3,15 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Question extends Model {
     static associate(models) {
-      this.belongsTo(models.Unit, { foreignKey: 'unitId', as: 'unit' });
+      this.belongsTo(models.Unit, { foreignKey: 'unitId', });
     }
   }
 
   Question.init({
     questionId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4
     },
     content: {
       type: DataTypes.TEXT,
@@ -26,9 +26,9 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     unitId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
-        model: 'Units',
+        model: 'Unit',
         key: 'unitId',
       },
       allowNull: false,
@@ -37,6 +37,22 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM('A', 'B', 'C', 'D'),
       allowNull: false,
     },
+    answerA: {
+      type: DataTypes.TEXT,
+      allowNull:false
+   },
+   answerB: {
+      type: DataTypes.TEXT,
+      allowNull:false
+   },
+   answerC: {
+      type: DataTypes.TEXT,
+      allowNull:false
+   },
+   answerD: {
+      type: DataTypes.TEXT,
+      allowNull:false
+   },
   }, {
     sequelize,
     modelName: 'Question',
