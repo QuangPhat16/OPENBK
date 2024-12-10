@@ -3,29 +3,28 @@ const {Model, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
     class Test extends Model {
         static associate(models) {
-            this.belongsTo(models.Course, {foreignKey: 'courseId', as: 'course'});
-            this.belongsTo(models.User, {foreignKey: 'userId;', as: 'user'});
+            this.belongsTo(models.User, {foreignKey: 'userId;',});
         }
     }
 
     Test.init({
         testId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
-            autoIncrement: true,
+            defaultValue: DataTypes.UUIDV4
         },
         courseId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
-                model: 'Courses',
+                model: 'Course',
                 key: 'courseId',
             },
             allowNull: false,
         },
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
-                model: 'Users',
+                model: 'User',
                 key: 'userId',
             },
             allowNull: false,
@@ -33,19 +32,28 @@ module.exports = (sequelize) => {
         takenDate:{
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: sequelize.NOW
         },
         correctAnswers: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         numberOfQuestions: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        //seconds
+        takenTime: {
+            type: DataTypes.INTEGER,
+            allowNull:false
+        },
+        score: {
+            type: DataTypes.DECIMAL(1),
+            allowNull:false
+        },
     }, {
         sequelize,
         modelName: 'Test',
     });
-
     return Test;
 };

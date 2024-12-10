@@ -1,10 +1,12 @@
-const { User } = require('../../database/models')
+// controllers/userController.js
+const DB = require('../../database/models')
 const bcrypt = require('bcrypt')
+const User = DB.User
 
 //get user info
 const getUserInfo = async (req, res) => {
    const id = req.user.id
-   console.log(`${id}`)
+   // console.log(`${id}`)
    try {
       const user = await User.findByPk(id)
       if (!user) return res.status(404).json({ message: 'User not found' })
@@ -36,7 +38,6 @@ const createUser = async(req, res)=>{
       res.status(500).json({ error: err.message });
    }
 }
-
 //User change their info
 //Still cannot validate input
 const updateUserInfo = async (req, res) => {
