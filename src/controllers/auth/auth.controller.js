@@ -37,7 +37,6 @@ const signUp = async (req, res) => {
       res.status(200).json({userID, accessToken })
 
    } catch (err) {
-      console.log(`${err}`)
       res.status(500).json({ err })
    }
 }
@@ -47,6 +46,7 @@ const logIn = async (req, res) => {
    try {
       const { email, password } = req.body
       const existUser = await User.findOne({ where: { email } })
+      if (!existUser) return res.status(401).json({ ERROR: 'Email is not registered' })
       const userID = existUser.userID
       if (!existUser) return res.status(404).json({ message: 'User does not exist' })
 
@@ -71,7 +71,6 @@ const logIn = async (req, res) => {
       res.status(200).json({ userID, accessToken })
 
    } catch (err) {
-      console.log(`${err}`)
       return res.status(500).json({ err })
    }
 }
