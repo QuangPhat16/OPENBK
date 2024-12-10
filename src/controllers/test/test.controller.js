@@ -4,21 +4,21 @@ const sequelize = require('../../database/models'); // Ensure you have the corre
 const TestController = {
     async generateTest(req, res) {
         try {
-            const { courseId, numberOfQuestions, timeLimit } = req.query;
+            const { courseID, numberOfQuestions, timeLimit } = req.query;
             if (isNaN(parseInt(numberOfQuestions)) || isNaN(parseInt(timeLimit))) {
                 return res.status(400).json({ error: 'numberOfQuestions, and timeLimit must be numbers' });
             }
 
             if (questions.length < numberOfQuestions) {
                 const allQuestions = await Question.findAll({
-                    where: { courseId },
+                    where: { courseID },
                     order: sequelize.random()
                 });
                 return res.status(200).json({ questions: allQuestions, timeLimit });
             }
 
             const questions = await Question.findAll({
-                where: { courseId },
+                where: { courseID },
                 order: sequelize.random(),
                 limit: parseInt(numberOfQuestions)
             });
@@ -31,14 +31,14 @@ const TestController = {
 
     async saveResults(req, res) {
         try {
-            const courseId  = req.params;
-            const userId = req.user.id
+            const { ourseID }  = req.params;
+            const userID = req.user.id
             //Calculate number of correct answer in the frontend
             const { correctAnswers, takenTime, numberOfQuestions } = req.body;
 
             await Test.create({
-                userId,
-                courseId,
+                userID,
+                courseID,
                 numberOfQuestions,
                 correctAnswers,
                 takenTime,
@@ -53,9 +53,9 @@ const TestController = {
 
     async getTestResults(req, res) {
         try {
-            const { userId, courseId } = req.params;
+            const { userID, courseID } = req.params;
             const tests = await Test.findAll({
-                where: { userId, courseId },
+                where: { userID, courseID },
             });
             res.status(200).json(tests);
         } catch (error) {

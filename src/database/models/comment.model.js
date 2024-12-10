@@ -1,13 +1,21 @@
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Comment extends Model {}
+  class Comment extends Model {
+
+    static associate(models) {
+      // define association here
+      Comment.belongsTo(models.User, {
+        foreignKey: 'UserID',
+      });
+    }
+  }
 
   Comment.init({
-    id: {
-      type: DataTypes.INTEGER,
+    commentID: {
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true
+      defaultValue: DataTypes.UUIDV4
     },
     text: {
       type: DataTypes.STRING,
@@ -17,12 +25,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
-    userId: {
-      type: DataTypes.INTEGER,
+    userID: {
+      type: DataTypes.STRING,
+      references:{
+        model: 'User',
+        key: 'userID'
+      },
       allowNull: false
     },
-    parentId: {
-      type: DataTypes.INTEGER,
+    parentID: {
+      type: DataTypes.UUID,
+      references:{
+        model: 'Comment',
+        key:'commentID'
+      },
       allowNull: true
     }
   }, {

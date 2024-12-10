@@ -27,27 +27,23 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BLOB('long'),
         allowNull:false
       },
-      date: {
-        type: DataTypes.DATEONLY,
-        defaultValue: sequelize.NOW
-      },
       seen: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       },
-      userId: {
-        type: DataTypes.UUID,
+      userID: {
+        type: DataTypes.STRING,
         references:{
           model:'User',
-          key:'userId'
+          key:'userID'
         },
         allowNull: false
       },
-      courseId: {
-        type: DataTypes.UUID,
+      courseID: {
+        type: DataTypes.STRING,
         references: {
           model: 'Course',
-          key: 'courseId',
+          key: 'courseID',
        },
         allowNull: false
       }, 

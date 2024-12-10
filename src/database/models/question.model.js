@@ -3,12 +3,12 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Question extends Model {
     static associate(models) {
-      this.belongsTo(models.Unit, { foreignKey: 'unitId', });
+      this.belongsTo(models.Unit, { foreignKey: 'unitID', });
     }
   }
 
   Question.init({
-    questionId: {
+    questionID: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
@@ -25,11 +25,11 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    unitId: {
+    unitID: {
       type: DataTypes.UUID,
       references: {
         model: 'Unit',
-        key: 'unitId',
+        key: 'unitID',
       },
       allowNull: false,
     },

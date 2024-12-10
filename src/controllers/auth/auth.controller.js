@@ -3,18 +3,21 @@ const DB = require('../../database/models')
 const User = DB.User
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { generateUserID } = require('../../utils/generateID')
+
 
 // sign up
 const signUp = async (req, res) => {
    try {
       const { name, email, password } = req.body
+      const userID = generateUserID()
 
       const dupplicate = await User.findOne({ where: { email } })
       if (dupplicate) return res.status(401).json({ ERROR: 'Email is registered' })
 
       const hashpwd = await bcrypt.hash(password, 10)
-      const newUser = await User.create({ name, email, password: hashpwd })
 
+      const newUser = await User.create({ userID: userID, name, email, password: hashpwd })
       // create access, refresh token
       const accessToken = jwt.sign(
          { "username": newUser.name, "userID": newUser.id, "userRole": newUser.role },
@@ -31,7 +34,7 @@ const signUp = async (req, res) => {
       // store refresh token in cookies
       res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
-      res.status(200).json({ accessToken })
+      res.status(200).json({userID, accessToken })
 
    } catch (err) {
       console.log(`${err}`)
@@ -44,20 +47,20 @@ const logIn = async (req, res) => {
    try {
       const { email, password } = req.body
       const existUser = await User.findOne({ where: { email } })
-
+      const userID = existUser.userID
       if (!existUser) return res.status(404).json({ message: 'User does not exist' })
 
       const isPasswordCorrect = await bcrypt.compare(password, existUser.password)
       if (!isPasswordCorrect) return res.status(404).json({ message: 'Password is incorrect' })
 
       const accessToken = jwt.sign(
-         { "username": existUser.name, "userID": existUser.id, "userRole": existUser.role },
+         { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
          process.env.ACCESS_TOKEN_SECRET,
          { expiresIn: '3000s' }
       )
 
       const refreshToken = jwt.sign(
-         { "username": existUser.name, "userID": existUser.id, "userRole": existUser.role },
+         { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
          process.env.REFRESH_TOKEN_SECRET,
          { expiresIn: '1d' }
       )
@@ -65,7 +68,7 @@ const logIn = async (req, res) => {
       // store refresh token in cookies
       res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
-      res.status(200).json({ accessToken })
+      res.status(200).json({ userID, accessToken })
 
    } catch (err) {
       console.log(`${err}`)

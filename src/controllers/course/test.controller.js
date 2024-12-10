@@ -4,18 +4,22 @@ const sequelize = require('../../database/config/database'); // Ensure you have 
 const TestController = {
     async generateTest(req, res) {
         try {
-            const { courseId, numberOfQuestions, timeLimit } = req.query;
-            if (isNaN(parseInt(courseId)) || isNaN(parseInt(numberOfQuestions)) || isNaN(parseInt(timeLimit))) {
-                return res.status(400).json({ error: 'courseId, numberOfQuestions, and timeLimit must be numbers' });
+            const { courseID, numberOfQuestions, timeLimit } = req.query;
+            if (isNaN(parseInt(courseID)) || isNaN(parseInt(numberOfQuestions)) || isNaN(parseInt(timeLimit))) {
+                return res.status(400).json({ error: 'courseID, numberOfQuestions, and timeLimit must be numbers' });
             }
+
+            const course = await Course.findByPk(courseID);
+            if (!course) return res.status(404).json({ error: 'Course not found' });
+
             const questions = await Question.findAll({
-                where: { courseId },
+                where: { courseID },
                 order: sequelize.random(),
                 limit: parseInt(numberOfQuestions)
             });
             if (questions.length < numberOfQuestions) {
                 const allQuestions = await Question.findAll({
-                    where: { courseId },
+                    where: { courseID },
                     order: sequelize.random()
                 });
                 return res.status(200).json({ questions: allQuestions, timeLimit });
@@ -29,12 +33,12 @@ const TestController = {
 
     async saveResults(req, res) {
         try {
-            const { userId, courseId } = req.params;
-            if (isNaN(parseInt(userId)) || isNaN(parseInt(courseId))) return res.status(400).json({ error: 'userId and courseId must be numbers' });
+            const { userID, courseID } = req.params;
+            if (isNaN(parseInt(userID)) || isNaN(parseInt(courseID))) return res.status(400).json({ error: 'userID and courseID must be numbers' });
             const { answers, takenTime, numberOfQuestions } = req.body;
 
             const questions = await Question.findAll({
-                where: { courseId },
+                where: { courseID },
                 order: sequelize.random(),
                 limit: numberOfQuestions
             });
@@ -47,8 +51,8 @@ const TestController = {
             });
 
             const test = await Test.create({
-                userId,
-                courseId,
+                userID,
+                courseID,
                 numberOfQuestions,
                 correctAnswers,
                 takenTime,
@@ -62,10 +66,10 @@ const TestController = {
     },
     async getTestResults(req, res) {
         try {
-            const { userId, courseId } = req.params;
-            if (isNaN(parseInt(userId)) || isNaN(parseInt(courseId))) return res.status(400).json({ error: 'userId and courseId must be numbers' });
+            const { userID, courseID } = req.params;
+            if (isNaN(parseInt(userID)) || isNaN(parseInt(courseID))) return res.status(400).json({ error: 'userID and courseID must be numbers' });
             const tests = await Test.findAll({
-                where: { userId, courseId },
+                where: { userID, courseID },
                 include: [{ model: Course, as: 'course' }, { model: User, as: 'user' }]
             });
             res.status(200).json(tests);
@@ -74,3 +78,5 @@ const TestController = {
         }
     }
 }
+
+module.exports = TestController

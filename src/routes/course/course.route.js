@@ -4,8 +4,8 @@ const {createCourse, getCourse, updateCourse, deleteCourse, getAllCourses} = req
 const router = express.Router();
 router.post('/', createCourse); 
 router.get('/', getAllCourses);
-router.get('/:courseId', getCourse); 
-router.put('/:courseId', updateCourse);
-router.delete('/:courseId', deleteCourse); 
+router.get('/:courseID', getCourse); 
+router.put('/:courseID', updateCourse);
+router.delete('/:courseID', deleteCourse); 
 
 module.exports = router;

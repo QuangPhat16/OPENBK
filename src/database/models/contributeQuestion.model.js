@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     
   }
   contQuestion.init({
-      contQuestionId:{
+      contQuestionID:{
          type: DataTypes.UUID,
          primaryKey: true,
          defaultValue: DataTypes.UUIDV4,
@@ -31,10 +31,10 @@ module.exports = (sequelize, DataTypes) => {
          allowNull: false
       },
       courseID: {
-         type: DataTypes.UUID,
+         type: DataTypes.STRING,
          references: {
             model: 'Course',
-            key: 'courseId',
+            key: 'courseID',
          },
          allowNull: false
       },

@@ -2,13 +2,14 @@
 const DB = require('../../database/models')
 const bcrypt = require('bcrypt')
 const User = DB.User
+const Course = DB.Course
+const { deleteCourse } = require('../course/course.controller')
 
 //get user info
 const getUserInfo = async (req, res) => {
-   const id = req.user.id
-   // console.log(`${id}`)
+   const { userID } = req.params
    try {
-      const user = await User.findByPk(id)
+      const user = await User.findOne({ where: { userID } })
       if (!user) return res.status(404).json({ message: 'User not found' })
       return res.json(user)
    } catch (err) {
@@ -38,6 +39,25 @@ const createUser = async(req, res)=>{
       res.status(500).json({ error: err.message });
    }
 }
+
+const deleteUser = async (req, res) => {
+   const { userID } = req.params
+   try {
+      const courses = await Course.findAll({ where: { ownerID: userID } })
+      if (courses.length > 0) {
+         for (let i = 0; i < courses.length; i++) {
+            await deleteCourse({ params: { courseID: courses[i].courseID } })
+         }
+      }
+      const deleted = await User.destroy({ where: { userID } })
+      if (!deleted) return res.status(404).json({ error: 'User not found' });
+      res.json({ message: 'Deleted user successfully' })
+   } catch (err) {
+      res.status(500).json({ error: err.message });
+   }
+}
+
+
 //User change their info
 //Still cannot validate input
 const updateUserInfo = async (req, res) => {
@@ -73,6 +93,7 @@ module.exports = {
    getUserInfo,
    getAllUsers,
    createUser,
+   deleteUser,
    updateUserInfo,
    updateCollabPrivilege
 }

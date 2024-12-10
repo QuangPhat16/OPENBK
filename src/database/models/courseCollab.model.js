@@ -8,19 +8,19 @@ module.exports = (sequelize, DataTypes) => {
     
   }
   courseCollab.init({
-      collabId: {
-        type: DataTypes.UUID,
+      collabID: {
+        type: DataTypes.STRING,
         references:{
            model:'User',
-           key:'userId'
+           key:'userID'
         },
         allowNull: false
       },
-      courseId: {
-        type: DataTypes.UUID,
+      courseID: {
+        type: DataTypes.STRING,
         references: {
            model: 'Course',
-           key: 'courseId',
+           key: 'courseID',
        },
         allowNull: false
       }, 

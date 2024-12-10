@@ -3,23 +3,29 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Course extends Model {
     static associate(models) {
-      this.hasMany(models.Unit, { foreignKey: 'courseId',});
-      this.belongsTo(models.User, {foreignKey: 'userId;',});
+      this.hasMany(models.Unit, { foreignKey: 'courseID',});
+      this.belongsTo(models.User, {foreignKey: 'ownerID',});
     }
   }
 
   Course.init({
-    courseId: {
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue:DataTypes.UUIDV4,
     },
-    ownerId: {
-      type: DataTypes.UUID,
+    courseID: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    ownerID: {
+      type: DataTypes.STRING,
       references:{
         model: 'User',
-        key: 'userId'
-      }
+        key: 'userID'
+      },
+      allowNull: false
     },
     courseName: {
       type: DataTypes.STRING,
@@ -28,10 +34,6 @@ module.exports = (sequelize) => {
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
-    },
-    createDate: {
-      type: DataTypes.DATE,
-      defaultValue: sequelize.NOW,
     },
     price:{
       type: DataTypes.STRING,

@@ -6,7 +6,7 @@ const courseCollabRoutes = require('./courseCollab.route')
 const router = express.Router();
 
 router.use('/', courseRoutes);
-router.use('/:courseId/collab', courseCollabRoutes);
-router.use('/:courseId/content', contentRoutes);
+router.use('/:courseID/collab', courseCollabRoutes);
+router.use('/:courseID/content', contentRoutes);
 
 module.exports = router;

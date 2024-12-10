@@ -3,8 +3,8 @@ const { Comment } = require('../../database/models');
 
 const createComment = async (req, res) => {
   try {
-    const { text, userId, parentId } = req.body;
-    await Comment.create({ text, userId, parentId });
+    const { text, userID, parentID } = req.body;
+    await Comment.create({ text, userID, parentID });
     res.status(201).json({message: 'Create comment successfully'});
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -14,11 +14,11 @@ const createComment = async (req, res) => {
 //get all parent comments
 const getComments = async (req, res) => {
   try {
-    courseId = req.params 
+    const { courseID } = req.params 
     const comments = await Comment.findAll({
       where: {
-        courseId,
-        parentId: null}
+        courseID,
+        parentID: null}
     });
     res.status(200).json({'comments': comments});
   } catch (error) {
@@ -29,12 +29,12 @@ const getComments = async (req, res) => {
 //get children comments
 const getSubComments = async (req, res) => {
   try {
-    const courseId = req.params 
-    const parentId = rq.body
+    const { courseID } = req.params 
+    const parentID = rq.body
     const comments = await Comment.findAll({
       where: {
-        courseId,
-        parentId
+        courseID,
+        parentID
       }
     });
     res.status(200).json({'comments': comments});
@@ -45,13 +45,13 @@ const getSubComments = async (req, res) => {
 
 const updateComment = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const {commentId, text} = req.body;
+    const { userID } = req.user.id;
+    const {commentID, text} = req.body;
     const comment = await Comment.findByPk(id);
-    if(comment.userId !== userId) return res.status(401).json({message:'Unauthorized'})
+    if(comment.userID !== userID) return res.status(401).json({message:'Unauthorized'})
     updated = await Comment.update(
       {text},
-      {where: {commentId}},
+      {where: {commentID}},
     )
     if(!updated) return res.status(404).json({message: 'Comment not found'})
 
@@ -62,9 +62,9 @@ const updateComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   try {
-    const { commentId } = req.body;
+    const { commentID } = req.body;
     deleted = await Comment.destroy({
-      where:{ commentId },
+      where:{ commentID },
     })
   } catch (error) {
     res.status(500).json({ error: error.message });

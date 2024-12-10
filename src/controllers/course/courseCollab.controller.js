@@ -4,10 +4,10 @@ const { courseCollab } = require('../../database/models');
 //Get all coruse collaborators
 const getAllCollabs = async(req, res) => {
    try {
-      const courseId = req.params
+      const { courseID } = req.params
       collabs = await courseCollab.findAll({
          where:{
-           courseId,
+           courseID,
          },
       })
       if(!collab.length) return res.status(404).json({ error: 'No collaborator is found' }) 
@@ -19,11 +19,13 @@ const getAllCollabs = async(req, res) => {
 //add collaborator to course
 const addCourseCollab = async(req, res) => {
    try{
-      courseId = req.params
-      collabId = req.body
-      if(checkNull({ courseId, collabId })) 
+      const {courseID, collabID} = req.body
+      if(checkNull({ courseID, collabID })) 
          return res.status(400).json({message:'Add collaborator failed, some fields are missing'})
-      await courseCollab.create({courseId, collabId})
+      const course = await Course.findByPk(courseID)
+      const user = await User.findByPk(collabID)
+      if(!course || !user) return res.status(404).json({ error: 'Course or user not found' })
+      await courseCollab.create({courseID, collabID})
       res.status(200).json({ message: 'Add collaborator to course successfully' });     
    }catch(err){
       res.status(500).json({ error: error.message });     
@@ -32,12 +34,12 @@ const addCourseCollab = async(req, res) => {
 //delete
 const deleteCourseCollab = async(req, res) => {
    try {
-      const courseId = req.params
-      const collabId = req.body
+      const { courseID } = req.params
+      const collabID = req.body
       deleted = await courseCollab.destroy({
         where:{
-         courseId,
-         collabId,
+         courseID,
+         collabID,
         },
       })
       if(!deleted) return res.status(404).json({ error: 'Collaborator not found' })

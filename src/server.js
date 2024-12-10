@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/auth', require('./routes/auth.route'))
-app.use(verifyJWT)
+// app.use(verifyJWT)
 app.use('/', require('./routes'))
 
 

@@ -3,29 +3,29 @@ const {Model, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
     class Test extends Model {
         static associate(models) {
-            this.belongsTo(models.User, {foreignKey: 'userId;',});
+            this.belongsTo(models.User, {foreignKey: 'userID',});
         }
     }
 
     Test.init({
-        testId: {
+        testID: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        courseId: {
-            type: DataTypes.UUID,
+        courseID: {
+            type: DataTypes.STRING,
             references: {
                 model: 'Course',
-                key: 'courseId',
+                key: 'courseID',
             },
             allowNull: false,
         },
-        userId: {
-            type: DataTypes.UUID,
+        userID: {
+            type: DataTypes.STRING,
             references: {
                 model: 'User',
-                key: 'userId',
+                key: 'userID',
             },
             allowNull: false,
         },

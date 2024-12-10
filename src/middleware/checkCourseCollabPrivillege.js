@@ -1,11 +1,11 @@
 const checkCollabPrivilige = async(req, res, next) => {
    try {
-      courseId = req.params
-      collabId = req.user.id
+      const { courseID } = req.params
+      collabID = req.user.id
       collab = await courseCollab.findOne({
          where:{
-          courseId,
-          collabId,
+          courseID,
+          collabID,
          },
       })
       if(!collab) return res.status(401).json({message: 'Unauthorized'})
