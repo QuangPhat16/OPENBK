@@ -3,7 +3,8 @@ const {Model, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
     class Test extends Model {
         static associate(models) {
-            this.belongsTo(models.User, {foreignKey: 'userID',});
+            this.belongsTo(models.Course, {foreignKey: 'courseID', as: 'course'});
+            this.belongsTo(models.User, {foreignKey: 'userID', as: 'user'});
         }
     }
 
@@ -35,7 +36,7 @@ module.exports = (sequelize) => {
             defaultValue: sequelize.NOW
         },
         correctAnswers: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         numberOfQuestions: {

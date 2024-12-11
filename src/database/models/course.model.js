@@ -3,8 +3,16 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Course extends Model {
     static associate(models) {
-      this.hasMany(models.Unit, { foreignKey: 'courseID',});
-      this.belongsTo(models.User, {foreignKey: 'ownerID',});
+      this.hasMany(models.Unit, { foreignKey: 'courseID', as: 'units' });
+      this.hasOne(models.Preview, { foreignKey: 'userID', as: 'preview' });
+      this.belongsToMany(models.User, {
+        through: models.Participate,
+        foreignKey: 'courseID',
+      });
+      this.belongsTo(models.User, {
+        foreignKey: 'authorID',
+        as: 'author', 
+      });
     }
   }
 
@@ -19,7 +27,7 @@ module.exports = (sequelize) => {
       unique: true,
       allowNull: false,
     },
-    ownerID: {
+    authorID: {
       type: DataTypes.STRING,
       references:{
         model: 'User',
@@ -31,9 +39,14 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    imageUrl: {
+      type: DataTypes.STRING,
+    },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
+    },
+    category: {
+      type: DataTypes.TEXT,
     },
     price:{
       type: DataTypes.STRING,
@@ -42,7 +55,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'Course',
-  });
+  })
 
   return Course;
-};
+}

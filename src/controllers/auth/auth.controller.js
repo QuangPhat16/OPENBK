@@ -20,13 +20,13 @@ const signUp = async (req, res) => {
       const newUser = await User.create({ userID: userID, name, email, password: hashpwd })
       // create access, refresh token
       const accessToken = jwt.sign(
-         { "username": newUser.name, "userID": newUser.id, "userRole": newUser.role },
+         { name: newUser.name, id: newUser.id, role: newUser.role },
          process.env.ACCESS_TOKEN_SECRET,
          { expiresIn: '3000s' }
       )
 
       const refreshToken = jwt.sign(
-         { "username": newUser.name, "userID": newUser.id, "userRole": newUser.role },
+         { name: newUser.name, id: newUser.id, role: newUser.role },
          process.env.REFRESH_TOKEN_SECRET,
          { expiresIn: '1d' }
       )
@@ -58,7 +58,7 @@ const logIn = async (req, res) => {
          process.env.ACCESS_TOKEN_SECRET,
          { expiresIn: '3000s' }
       )
-
+   
       const refreshToken = jwt.sign(
          { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
          process.env.REFRESH_TOKEN_SECRET,

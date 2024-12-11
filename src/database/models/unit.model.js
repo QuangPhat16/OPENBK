@@ -3,8 +3,8 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Unit extends Model {
     static associate(models) {
-      this.belongsTo(models.Course, { foreignKey: 'courseID' });
-      this.hasMany(models.Question, { foreignKey: 'unitID' });
+      this.belongsTo(models.Course, { foreignKey: 'courseID', as: 'course'  });
+      this.hasMany(models.Question, { foreignKey: 'unitID', as: 'questions' });
     }
   }
 
@@ -21,6 +21,7 @@ module.exports = (sequelize) => {
     numericalOrder: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      // autoIncrement: true,
       unique: true,
     },
     courseID: {
@@ -35,11 +36,6 @@ module.exports = (sequelize) => {
     sequelize,
     modelName: 'Unit',
   });
-
-  /**
-   * Add a Sequelize hook to auto-increment `numericalOrder`.
-   * This assumes `numericalOrder` increments independently for each `courseID`.
-   */
   Unit.beforeCreate(async (unit, options) => {
     const maxOrder = await Unit.max('numericalOrder', {
       where: { courseID: unit.courseID },
