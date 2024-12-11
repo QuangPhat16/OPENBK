@@ -1,10 +1,12 @@
-const { Course } = require('../../database/models');
+const { Course, User } = require('../../database/models');
+
 
 const CourseController = {
   async createCourse(req, res) {
     try {
-      const { courseName, description } = req.body;
-      const course = await Course.create({ courseName, description });
+      const id = req.user.id;
+      const { courseId, courseName, imageUrl, user, category } = req.body;
+      const course = await Course.create({ courseId, courseName, imageUrl, user, category, authorId: id });
       res.status(201).json(course);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -12,12 +14,18 @@ const CourseController = {
   },
 
   async getAllCourses(req, res) {
-    try{
-      const response = await Course.findAll()
+    try {
+      const response = await Course.findAll({
+        include: {
+          model: User,
+          as: 'author',
+          attributes: ['firstName', 'lastName', 'name']
+        }
+      })
       res.json(response)
     }
-    catch(err){
-        res.status(500).json(err)
+    catch (error) {
+      res.status(500).json({ error: error.message })
     }
   },
 
@@ -57,6 +65,16 @@ const CourseController = {
       const deleted = await Course.destroy({ where: { courseId: id } });
       if (!deleted) return res.status(404).json({ error: 'Course not found' });
       res.status(200).json({ message: 'Course deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  async deleteAllCourses(req, res) {
+    try {
+      const deleted = await Course.destroy({ where: {} });
+      if (!deleted) return res.status(404).json({ error: 'No courses found to delete' });
+      res.status(200).json({ message: 'All courses deleted successfully' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

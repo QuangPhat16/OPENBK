@@ -7,6 +7,7 @@ const verifyJWT = (req, res, next) => {
    const authHeader = req.headers['authorization'];
    const cookies = req.cookies;
 
+   console.log("VerifyJWT")
    // Check for access token in the Authorization Header
    if (authHeader) {
       const token = authHeader.split(' ')[1];

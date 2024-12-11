@@ -9,34 +9,55 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(models.Course, {
+        through: models.Participate,
+        foreignKey: 'userId',
+      });
+      this.hasMany(models.Course, {
+        foreignKey: 'authorId', // Trường này sẽ là authorId trong bảng Course
+        as: 'authoredCourses', // Tên alias cho mối quan hệ
+      });
     }
-    
+
   }
   User.init({
-    id:{
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    name: {
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
-      unique:true,
+      unique: true,
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('USER'||'COLLAB'||'ADMIN'),
+      type: DataTypes.ENUM('USER', 'COLLAB', 'ADMIN'),
       allowNull: false,
       defaultValue: 'USER'
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    name: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+      set(value) {
+        throw new Error('Do not try to set the `name` value directly.');
+      }
     }
-  },{
+  }, {
     sequelize,
     modelName: 'User',
   });

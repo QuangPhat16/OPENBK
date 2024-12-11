@@ -1,4 +1,4 @@
-const { User } = require('../../database/models')
+const { User, Course } = require('../../database/models')
 const bcrypt = require('bcrypt')
 
 //get user info
@@ -15,23 +15,23 @@ const getUserInfo = async (req, res) => {
    }
 }
 
-const getAllUsers = async(req, res)=>{
-   try{
+const getAllUsers = async (req, res) => {
+   try {
       const user = await User.findAll()
       res.json(user)
    }
-   catch(err){
+   catch (err) {
       res.status(500).json(err)
    }
 }
 
-const createUser = async(req, res)=>{
-   const {name, email, role, password} = req.body
-   try{
-      const user = await User.create({name, email, role, password})
-      res.json({message:'Created user successfully',user})
+const createUser = async (req, res) => {
+   const { name, email, role, password } = req.body
+   try {
+      const user = await User.create({ name, email, role, password })
+      res.json({ message: 'Created user successfully', user })
    }
-   catch(err){
+   catch (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
    }
@@ -54,6 +54,25 @@ const updateUserInfo = async (req, res) => {
    }
 }
 
+const updateUserPassword = async (req, res) => {
+   const { password, newPassword } = req.body
+   const id = req.user.id
+   try {
+      const updateUser = await User.findByPk(id)
+      if (!updateUser) return res.status(404).json({ message: 'Updated fail, no user not found' })
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(401).json({ message: 'Invalid current password' });
+
+      const hashpwd = await bcrypt.hash(newPassword, 10)
+      await User.update({ password: hashpwd }, { where: { id } })
+      return res.json({ message: 'Update user password successfully' })
+   } catch (err) {
+      console.error(`${err}`);
+      return res.status(500).json({ error: err.message })
+   }
+}
+
 //admin change collaborator privilege
 const updateCollabPrivilege = async (req, res) => {
    const { role } = req.body
@@ -68,10 +87,35 @@ const updateCollabPrivilege = async (req, res) => {
    }
 }
 
+const getAllCourseByUser = async (req, res) => {
+   const id = req.user.id;
+   try {
+      console.log(id)
+      const userCourses = await User.findOne({
+         where: { id: id },
+         attributes: [],
+         include: {
+            model: Course,
+            through: { attributes: [] },
+         },
+      });
+      if (!userCourses) {
+         return res.status(404).json({ message: "User not found" });
+      }
+
+      return res.status(200).json(userCourses);
+   } catch (err) {
+      console.error(`${err}`);
+      return res.status(500).json({ error: err.message })
+   }
+}
+
 module.exports = {
    getUserInfo,
    getAllUsers,
    createUser,
    updateUserInfo,
-   updateCollabPrivilege
+   updateUserPassword,
+   updateCollabPrivilege,
+   getAllCourseByUser,
 }
