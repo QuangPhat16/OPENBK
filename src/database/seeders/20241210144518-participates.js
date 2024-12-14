@@ -5,7 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
     const users = await queryInterface.sequelize.query(
-      'SELECT id FROM "User";',
+      'SELECT "userID" FROM "User";',
       { type: Sequelize.QueryTypes.SELECT }
     );
     const courses = await queryInterface.sequelize.query(
@@ -18,7 +18,7 @@ module.exports = {
     const participateData = [
       {
         id: Sequelize.literal('uuid_generate_v4()'),
-        userID: users[0].id, // userID từ bảng Users
+        userID: users[0].userID, // userID từ bảng Users
         courseID: courses[0].courseID, // courseID từ bảng Courses
         enrollmentDate: new Date(),
         createdAt: new Date(),
@@ -26,7 +26,7 @@ module.exports = {
       },
       {
         id: Sequelize.literal('uuid_generate_v4()'),
-        userID: users[1].id,
+        userID: users[1].userID,
         courseID: courses[1].courseID,
         enrollmentDate: new Date(),
         createdAt: new Date(),
@@ -35,12 +35,12 @@ module.exports = {
       // Thêm các bản ghi khác nếu cần
     ];
 
-    await queryInterface.bulkInsert('Participates', participateData);
+    await queryInterface.bulkInsert('Participate', participateData);
   },
 
   async down(queryInterface, Sequelize) {
 
-    await queryInterface.bulkDelete('Participates', null, {});
+    await queryInterface.bulkDelete('Participate', null, {});
 
   }
 };

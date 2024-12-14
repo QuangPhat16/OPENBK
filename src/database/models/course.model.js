@@ -11,25 +11,21 @@ module.exports = (sequelize) => {
       });
       this.belongsTo(models.User, {
         foreignKey: 'authorID',
-        as: 'author', 
+        as: 'author',
       });
     }
   }
 
   Course.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue:DataTypes.UUIDV4,
-    },
     courseID: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      primaryKey: true,
     },
     authorID: {
       type: DataTypes.STRING,
-      references:{
+      references: {
         model: 'User',
         key: 'userID'
       },
@@ -48,7 +44,7 @@ module.exports = (sequelize) => {
     category: {
       type: DataTypes.TEXT,
     },
-    price:{
+    price: {
       type: DataTypes.STRING,
       defaultValue: 'Free'
     },

@@ -9,21 +9,17 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.hasMany(models.Course, {
         foreignKey: 'authorID',
-        as: 'authoredCourses', 
+        as: 'authoredCourses',
       });
     }
 
   }
   User.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
     userID: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -43,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    profileUrl: {
+      type: DataTypes.STRING,
+    }
   }, {
     sequelize,
     modelName: 'User',

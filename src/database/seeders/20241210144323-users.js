@@ -6,11 +6,13 @@ module.exports = {
 
     await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
 
-    await queryInterface.bulkInsert('Users', [
+    await queryInterface.bulkInsert('User', [
       {
-        id: Sequelize.literal('uuid_generate_v4()'), // Tạo UUID cho id
-        firstName: 'John',
-        lastName: 'Doe',
+        // id: Sequelize.literal('uuid_generate_v4()'), // Tạo UUID cho id
+        // firstName: 'John',
+        // lastName: 'Doe',
+        userID: "dnafnaksdfbak",
+        name: "John Doe",
         email: 'john.doe@example.com',
         role: 'USER',
         password: 'hashedPassword123', // Đảm bảo mã hóa mật khẩu trước khi lưu vào db
@@ -18,9 +20,11 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        id: Sequelize.literal('uuid_generate_v4()'),
-        firstName: 'Jane',
-        lastName: 'Smith',
+        // id: Sequelize.literal('uuid_generate_v4()'),
+        // firstName: 'Jane',
+        // lastName: 'Smith',
+        userID: "adnsfjknasfjansf",
+        name: "Jane Smith",
         email: 'jane.smith@example.com',
         role: 'COLLAB',
         password: 'hashedPassword456',
@@ -28,9 +32,11 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        id: Sequelize.literal('uuid_generate_v4()'),
-        firstName: 'Admin',
-        lastName: 'User',
+        // id: Sequelize.literal('uuid_generate_v4()'),
+        // firstName: 'Admin',
+        // lastName: 'User',
+        userID: "adfghtyhrtbvdfvsd",
+        name: "Admin User",
         email: 'admin.user@example.com',
         role: 'ADMIN',
         password: 'hashedPassword789',
@@ -41,6 +47,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Users', null, {});
+    await queryInterface.bulkDelete('User', null, {});
   }
 };

@@ -18,18 +18,19 @@ router.get('/', getAllUsers)
 
 router.post('/', createUser)
 
+router.get('/course', getAllCourseByUser) // thêm middleware verifyJWT sau và vẫn phải đặt trước getUserInfo
+
 router.get('/:userID', getUserInfo)
 
-router.use(verifyJWT)
+// router.use(verifyJWT)
 
 router.delete('/:userID', deleteUser)
 
 router.patch('/info', userUpdateValidations, updateUserInfo)
 
-router.patch('info/password', updateUserPassword)
+router.patch('/info/password', updateUserPassword)
 
 router.patch('/collab/:id', userUpdateValidations, updateCollabPrivilege)
 
-router.get('/course', getAllCourseByUser)
 
 module.exports = router
