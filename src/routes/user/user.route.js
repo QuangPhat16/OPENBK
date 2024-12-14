@@ -7,22 +7,27 @@ const {
    getAllUsers,
    createUser,
    deleteUser,
+   deleteAllUsers,
    updateUserInfo,
    updateCollabPrivilege,
    updateUserPassword,
    getAllCourseByUser,
 } = require('../../controllers/users/user.controller')
-const verifyJWT = require('../../middleware/verifyJWT')
 
-router.get('/', getAllUsers)
+router.delete('/:userID', deleteUser)
+
+router.delete('/', deleteAllUsers)
 
 router.post('/', createUser)
 
-router.get('/:userID', getUserInfo)
+const verifyJWT = require('../../middleware/verifyJWT')
 
 router.use(verifyJWT)
 
-router.delete('/:userID', deleteUser)
+router.get('/', getAllUsers)
+
+router.get('/:userID', getUserInfo)
+
 
 router.patch('/info', userUpdateValidations, updateUserInfo)
 

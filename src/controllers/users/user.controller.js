@@ -1,12 +1,16 @@
 const { User, Course } = require('../../database/models')
 const bcrypt = require('bcrypt')
 const { deleteCourse } = require('../course/course.controller')
+const { generateUserID } = require('../../utils/generateID')
 
 //get user info
 const getUserInfo = async (req, res) => {
    const { userID } = req.params
    try {
-      const user = await User.findOne({ where: { userID } })
+      const user = await User.findOne({ 
+         where: { userID }, 
+         attributes: { exclude: ['password'] } 
+      })
       if (!user) return res.status(404).json({ message: 'User not found' })
       return res.json(user)
    } catch (err) {
@@ -17,18 +21,27 @@ const getUserInfo = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
    try {
-      const user = await User.findAll()
-      res.json(user)
+      const users = await User.findAll({
+         attributes: { exclude: ['password'] }
+      });
+      res.json(users);
    }
    catch (err) {
-      res.status(500).json(err)
+      res.status(500).json({ error: err.message });
    }
 }
 
 const createUser = async (req, res) => {
-   const { name, email, role, password } = req.body
+
    try {
-      const user = await User.create({ name, email, role, password })
+      const { name, email, role, password } = req.body
+      const userID = generateUserID()
+      const dupplicate = await User.findOne({ where: { email } })
+      if (dupplicate) return res.status(401).json({ ERROR: 'Email is registered' })
+
+      const hashpwd = await bcrypt.hash(password, 10)
+
+      const user = await User.create({ userID: userID, name, email, role, password: hashpwd })
       res.json({ message: 'Created user successfully', user })
    }
    catch (err) {
@@ -54,6 +67,15 @@ const deleteUser = async (req, res) => {
    }
 }
 
+const deleteAllUsers = async (req, res) => {
+   try {
+      const deleted = await User.destroy({ where: {} });
+      if (!deleted) return res.status(404).json({ error: 'No users found to delete' });
+      res.status(200).json({ message: 'All users deleted successfully' });
+   } catch (error) {
+      res.status(500).json({ error: error.message });
+   }
+}
 
 //User change their info
 //Still cannot validate input
@@ -128,11 +150,13 @@ const getAllCourseByUser = async (req, res) => {
    }
 }
 
+
 module.exports = {
    getUserInfo,
    getAllUsers,
    createUser,
    deleteUser,
+   deleteAllUsers,
    updateUserInfo,
    updateUserPassword,
    updateCollabPrivilege,

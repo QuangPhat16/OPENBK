@@ -3,20 +3,37 @@ const {filterNull, checkNull} = require('../../common/ultis');
 const { generateCourseID } = require('../../utils/generateID');
 
 const CourseController = {
-  async createCourse (req, res) {
+  async createCourse(req, res) {
     try {
       const { authorID, courseName, imageUrl, category, description, price } = req.body;
-      if(checkNull({ authorID, courseName, imageUrl, category, description, price })) return res.status(400).json({message:'Course creation failed, some fields are missing'})
-      const userID = authorID
-      console.log(userID)
-      const author = await User.findOne({ where: { userID } });
-      if(!author) return res.status(404).json({message:'author not found'})
-      await Course.create({ courseID: generateCourseID(), authorID, courseName, description, price });
-      return res.status(201).json({message:'Course creation is successful'});
+      if (checkNull({ authorID, courseName, imageUrl, category, description, price })) {
+        return res.status(400).json({ message: 'Course creation failed, some fields are missing' });
+      }
+
+      const author = await User.findOne({ where: { userID: authorID } });
+      if (!author) {
+        return res.status(404).json({ message: 'Author not found' });
+      }
+
+      if (author.role !== 'COLLAB') {
+        return res.status(403).json({ message: 'You do not have permission to create a course, role must be COLLAB' });
+      }
+
+      await Course.create({
+        courseID: generateCourseID(),
+        authorID,
+        courseName,
+        description,
+        price
+      });
+
+      return res.status(201).json({ message: 'Course creation is successful' });
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+
 
 
   async getAllCourses(req, res) {
@@ -46,25 +63,53 @@ const CourseController = {
     }
   },
 
-  async updateCourse(req, res){
+  async updateCourse(req, res) {
     try {
-      const { courseID }  = req.params;
-      const { description, price, courseName} = req.body;
-      const params = filterNull({ description, price, courseName})
+      const courseId = req.params.courseID;
+      const {
+        description: newDescription,
+        price: newPrice,
+        courseName: newCourseName,
+        authorId: newAuthorId,
+      } = req.body;
 
-      const updated = await Course.update(params, {where:{
-        courseID,
-      }})
+      const fieldsToUpdate = filterNull({
+        description: newDescription,
+        price: newPrice,
+        courseName: newCourseName,
+      });
 
-      if(!updated) return res.status(404).json({ error: 'Course not found' });
+      const course = await Course.findByPk(courseId);
+      if (!course) {
+        return res.status(404).json({ error: 'Course not found' });
+      }
+
+      const author = await User.findByPk(newAuthorId);
+      if (!author) {
+        return res.status(404).json({ error: 'Author not found' });
+      }
+
+      if (author.role !== 'COLLAB') {
+        return res.status(403).json({ error: 'You do not have permission to update this course, role must be COLLAB' });
+      }
+      if (course.authorId !== newAuthorId) {
+        return res.status(403).json({ error: 'You are not the author of this course and cannot update it' });
+      }
+
+      const [updatedRowsCount] = await Course.update(fieldsToUpdate, {
+        where: { courseID: courseId },
+      });
+      if (updatedRowsCount === 0) {
+        return res.status(400).json({ error: 'No changes were made' });
+      }
 
       res.status(200).json({ message: 'Updated course successfully' });
 
     } catch (error) {
-
       res.status(500).json({ error: error.message });
     }
   },
+
 
   //DELETE
   async deleteCourse (req, res) {
