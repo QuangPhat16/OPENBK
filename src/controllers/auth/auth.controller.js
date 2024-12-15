@@ -32,9 +32,10 @@ const signUp = async (req, res) => {
       )
 
       // store refresh token in cookies
-      res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+      // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
-      res.status(200).json({userID, accessToken })
+      const role = "USER"
+      res.status(200).json({userID, role, accessToken })
 
    } catch (err) {
       res.status(500).json({ err })
@@ -47,7 +48,6 @@ const logIn = async (req, res) => {
       const { email, password } = req.body
       const existUser = await User.findOne({ where: { email } })
       if (!existUser) return res.status(401).json({ ERROR: 'Email is not registered' })
-      const userID = existUser.userID
       if (!existUser) return res.status(404).json({ message: 'User does not exist' })
 
       const isPasswordCorrect = await bcrypt.compare(password, existUser.password)
@@ -66,9 +66,11 @@ const logIn = async (req, res) => {
       )
 
       // store refresh token in cookies
-      res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+      // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
-      res.status(200).json({ userID, accessToken })
+      const userID = existUser.userID
+      const role = existUser.role
+      res.status(200).json({ userID, role, accessToken })
 
    } catch (err) {
       return res.status(500).json({ err })
