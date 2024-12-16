@@ -11,13 +11,14 @@ const signUp = async (req, res) => {
    try {
       const { name, email, password } = req.body
       const userID = generateUserID()
+      const imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"
 
       const dupplicate = await User.findOne({ where: { email } })
       if (dupplicate) return res.status(401).json({ ERROR: 'Email is registered' })
 
       const hashpwd = await bcrypt.hash(password, 10)
 
-      const newUser = await User.create({ userID: userID, name, email, password: hashpwd })
+      const newUser = await User.create({ userID: userID, name, email, password: hashpwd, imageUrl })
       // create access, refresh token
       const accessToken = jwt.sign(
          { name: newUser.name, id: newUser.id, role: newUser.role },

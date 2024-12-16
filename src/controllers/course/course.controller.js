@@ -5,7 +5,10 @@ const { generateCourseID } = require('../../utils/generateID');
 const CourseController = {
   async createCourse(req, res) {
     try {
-      const { authorID, courseName, imageUrl, category, description, price } = req.body;
+      const { authorID, courseName, image, category, description, price } = req.body;
+      
+      const imageUrl = "https://t4.ftcdn.net/jpg/07/77/57/53/360_F_777575393_rZskmeQsWOY8TXBjwjcyBOHamOQfZyHs.jpg";
+
       if (checkNull({ authorID, courseName, imageUrl, category, description, price })) {
         return res.status(400).json({ message: 'Course creation failed, some fields are missing' });
       }
@@ -23,6 +26,8 @@ const CourseController = {
         courseID: generateCourseID(),
         authorID,
         courseName,
+        imageUrl,
+        category,
         description,
         price
       });

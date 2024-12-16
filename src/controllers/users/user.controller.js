@@ -36,12 +36,13 @@ const createUser = async (req, res) => {
    try {
       const { name, email, role, password } = req.body
       const userID = generateUserID()
-      const dupplicate = await User.findOne({ where: { email } })
-      if (dupplicate) return res.status(401).json({ ERROR: 'Email is registered' })
+      const duplicate = await User.findOne({ where: { email } })
+      if (duplicate) return res.status(401).json({ ERROR: 'Email is registered' })
 
       const hashpwd = await bcrypt.hash(password, 10)
+      const imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"
 
-      const user = await User.create({ userID: userID, name, email, role, password: hashpwd })
+      const user = await User.create({ userID, name, email, role, password: hashpwd, imageUrl })
       res.json({ message: 'Created user successfully', user })
    }
    catch (err) {

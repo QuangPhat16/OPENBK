@@ -20,7 +20,7 @@ module.exports = (sequelize) => {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue:DataTypes.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
     },
     courseID: {
       type: DataTypes.STRING,
@@ -46,7 +46,8 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
     },
     category: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM('MATH', 'ENGLISH', 'CODE', 'ART'),
+      allowNull: false,
     },
     price:{
       type: DataTypes.STRING,
@@ -55,7 +56,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'Course',
-  })
+  });
 
   return Course;
 }
