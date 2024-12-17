@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const {addCourseCollab, deleteCourseCollab, getAllCollabs} = require('../../controllers/course/courseCollab.controller')
+const CourseCollab = require('../../controllers/course/courseCollab.controller');
 
-router.post('/',addCourseCollab)
-router.get('/', getAllCollabs)
-router.delete('./', deleteCourseCollab)
+router.get('/', CourseCollab.getAllLearners)
+// router.get('/', getAllCollabs)
+router.delete('/:id', CourseCollab.deleteLearnerFromCourse)
 
 module.exports = router

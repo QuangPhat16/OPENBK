@@ -1,6 +1,7 @@
-const { Model, DataTypes } = require('sequelize');
+'use strict';
+const { Model  } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
     static associate(models) {
       this.hasMany(models.Unit, { foreignKey: 'courseID', as: 'units' });
@@ -8,23 +9,20 @@ module.exports = (sequelize) => {
       this.belongsToMany(models.User, {
         through: models.Participate,
         foreignKey: 'courseID',
+        as: 'courseLearned',
       });
       this.belongsTo(models.User, {
         foreignKey: 'authorID',
-        as: 'author', 
+        as: 'authorCourses',
       });
     }
   }
 
   Course.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
     courseID: {
       type: DataTypes.STRING,
       unique: true,
+      primaryKey: true,
       allowNull: false,
     },
     authorID: {

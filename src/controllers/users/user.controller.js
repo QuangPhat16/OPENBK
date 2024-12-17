@@ -1,7 +1,7 @@
 const { User, Course } = require('../../database/models')
 const bcrypt = require('bcrypt')
 const { deleteCourse } = require('../course/course.controller')
-const { generateUserID } = require('../../utils/generateID')
+const { generateCollabID } = require('../../utils/generateID')
 
 //get user info
 const getUserInfo = async (req, res) => {
@@ -35,7 +35,7 @@ const createUser = async (req, res) => {
 
    try {
       const { name, email, role, password } = req.body
-      const userID = generateUserID()
+      const userID = generateCollabID()
       const duplicate = await User.findOne({ where: { email } })
       if (duplicate) return res.status(401).json({ ERROR: 'Email is registered' })
 

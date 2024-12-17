@@ -1,54 +1,53 @@
-const { courseCollab } = require('../../database/models');
+const { Participate, User, Course } = require('../../database/models');
 
+const CourseCollab = {
+   async getAllLearners (req, res) {
+      try {
+         const { courseID } = req.params;
 
-//Get all coruse collaborators
-const getAllCollabs = async(req, res) => {
-   try {
-      const { courseID } = req.params
-      collabs = await courseCollab.findAll({
-         where:{
-           courseID,
-         },
-      })
-      if(!collab.length) return res.status(404).json({ error: 'No collaborator is found' }) 
-      return res.status(200).json({collabs})
-   }catch(err){
-      res.status(500).json({ error: error.message });      
-   }
+         const learners = await Participate.findAll({
+            where: {
+               courseID,
+            },
+            include: [
+               { model: User, as: 'learner', attributes: ['userID', 'name', 'email'] },
+            ],
+         });
+
+         if (learners.length === 0) {
+            return res.status(404).json({ error: 'No learners found for this course' });
+         }
+
+         return res.status(200).json({ learners });
+      } catch (err) {
+         console.error(err);
+         return res.status(500).json({ error: err.message });
+      }
+   },
+   async deleteLearnerFromCourse (req, res) {
+      try {
+         const { authorID, courseID , learnerID} = req.params;
+
+         if (!learnerID) {
+            return res.status(400).json({ message: 'Collab ID is missing' });
+         }
+
+         const deleted = await Participate.destroy({
+            where: {
+               authorID,
+               courseID,
+            },
+         });
+
+         if (!deleted) {
+            return res.status(404).json({ error: 'Learner not found in this course' });
+         }
+
+         return res.status(200).json({ message: 'Deleted learner from course successfully' });
+      } catch (err) {
+         console.error(err);
+         return res.status(500).json({ error: err.message });
+      }
+   },
 }
-//add collaborator to course
-const addCourseCollab = async(req, res) => {
-   try{
-      const {courseID, collabID} = req.body
-      if(checkNull({ courseID, collabID })) 
-         return res.status(400).json({message:'Add collaborator failed, some fields are missing'})
-      const course = await Course.findByPk(courseID)
-      const user = await User.findByPk(collabID)
-      if(!course || !user) return res.status(404).json({ error: 'Course or user not found' })
-      await courseCollab.create({courseID, collabID})
-      res.status(200).json({ message: 'Add collaborator to course successfully' });     
-   }catch(err){
-      res.status(500).json({ error: error.message });     
-   }
-}
-//delete
-const deleteCourseCollab = async(req, res) => {
-   try {
-      const { courseID } = req.params
-      const collabID = req.body
-      deleted = await courseCollab.destroy({
-        where:{
-         courseID,
-         collabID,
-        },
-      })
-      if(!deleted) return res.status(404).json({ error: 'Collaborator not found' })
-      res.status(200).json({ message: 'Deleted collaborator successful' })
-
-   }catch (error) {
-      res.status(500).json({ error: error.message })
-   }s
-}
-
-
-module.exports = {addCourseCollab, deleteCourseCollab, getAllCollabs}
+module.exports = CourseCollab

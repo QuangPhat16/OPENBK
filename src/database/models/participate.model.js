@@ -1,38 +1,43 @@
 'use strict';
-const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Participate extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-
-  }
-  Participate.init({
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    userID: {
+  const Participate = sequelize.define('Participate', {
+    learnerID: {
       type: DataTypes.STRING,
+      references: {
+        model: 'User',
+        key: 'userID',
+      },
       allowNull: false,
     },
     courseID: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE, 
+      references: {
+        model: 'Course',
+        key: 'courseID',
+      },
       allowNull: false,
     },
     enrollmentDate: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-  }, {
-    sequelize,
-    modelName: 'Participate',
-  });
+    status: {
+      type: DataTypes.ENUM('ENROLLED', 'COMPLETED', 'DROPPED'),
+      defaultValue: 'ENROLLED',
+    },
+  }, {});
+
+  Participate.associate = function (models) {
+    Participate.belongsTo(models.User, { 
+      foreignKey: 'learnerID',
+      as: 'learnerParticipates',
+    });
+    Participate.belongsTo(models.Course, { 
+      foreignKey: 'courseID',
+      as: 'courseLearned',
+     });
+  };
+
   return Participate;
 };
+

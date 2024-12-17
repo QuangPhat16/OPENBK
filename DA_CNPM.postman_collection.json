@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"hehehe\",\n  \"email\": \"haha@yahoo.com\",\n  \"password\": \"yourpassword123\"\n}\n",
+							"raw": "{\n  \"name\": \"trump\",\n  \"email\": \"learner@yahoo.com\",\n  \"password\": \"yourpassword123\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,19 +39,42 @@
 					"response": []
 				},
 				{
-					"name": "Login",
+					"name": "LoginLearner",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "token asdas",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"haha@yahoo.com\",\n    \"password\": \"yourpassword123\"\n}",
+							"raw": "{\n    \"email\": \"learner@yahoo.com\",\n    \"password\": \"yourpassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginCollab",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"collab@yahoo.com\",\n    \"password\": \"yourpassword123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -77,9 +100,15 @@
 					"name": "findId",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhaGFoYSBIZWhlaGUiLCJ1c2VySUQiOiJVUjI5NzQyMiIsInVzZXJSb2xlIjoiVVNFUiIsImlhdCI6MTczNDE4NDEyNywiZXhwIjoxNzM0MTg3MTI3fQ.dXi7UKn6QLnOSb2PN51qe5Bb22K0SlXihKdbln_nAJ4",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:3001/user/UR506270",
+							"raw": "http://localhost:3001/user/UR297422",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -87,7 +116,7 @@
 							"port": "3001",
 							"path": [
 								"user",
-								"UR506270"
+								"UR297422"
 							]
 						}
 					},
@@ -97,7 +126,13 @@
 					"name": "getAll",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9iYW1hIiwidXNlcklEIjoiVVI1MDYzODciLCJ1c2VyUm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQxOTAwODgsImV4cCI6MTczNDE5MzA4OH0.Sgcxht4E71MMNpUmU_mKN9eQmxyKuliI24DK5pRxcBo",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:3001/user/",
 							"protocol": "http",
@@ -127,7 +162,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSMzIwNTYwIiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTIwMzAyLCJleHAiOjE3MzM5MjMzMDJ9.9lCs4QeEpDIImMIquUXtwFJ1cT7w49GxHsw3jXS4Cgk",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhaGFoYSBIZWhlaGUiLCJ1c2VySUQiOiJVUjI5NzQyMiIsInVzZXJSb2xlIjoiVVNFUiIsImlhdCI6MTczNDE4ODk4NCwiZXhwIjoxNzM0MTkxOTg0fQ._eeosarGh0G14vJWQm5IsazAiHFxZS7NjbzY1WeB1Lc",
 								"type": "text"
 							}
 						],
@@ -145,6 +180,55 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "createCollab",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"trump\",\n  \"email\": \"collab@yahoo.com\",\n  \"password\": \"yourpassword123\",\n  \"role\": \"COLLAB\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAll",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -152,19 +236,300 @@
 			"name": "Course",
 			"item": [
 				{
+					"name": "Course Collab",
+					"item": [
+						{
+							"name": "getAll",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSODUyMTc4IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzODU5ODk0LCJleHAiOjE3MzM4NjI4OTR9.HpVVqOaIAh9Tg7mtIaFRsD0mSyMVEm5LjSli8L_S5q8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/course/collab",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"collab"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiVVI2NzAzMjkiLCJ1c2VyUm9sZSI6IkNPTExBQiIsImlhdCI6MTczNDMzODk2MiwiZXhwIjoxNzM0MzQxOTYyfQ.eIyPwJs9_QExtrVoqj4xWczjk1gw9syb2Or5AppdccY",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"authorID\": \"UR670329\",\n    \"imageUrl\": \"img\",\n    \"courseName\": \"math\",\n    \"description\": \"noo\",\n    \"category\": \"MATH\",\n    \"price\": \"10\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/course/collab",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"collab"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findId",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSODUyMTc4IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzODU5ODk0LCJleHAiOjE3MzM4NjI4OTR9.HpVVqOaIAh9Tg7mtIaFRsD0mSyMVEm5LjSli8L_S5q8",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3001/course/CO539345",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"CO539345"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3001/course/collab",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"collab"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteAll",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiVVIxODI1NTAiLCJ1c2VyUm9sZSI6IkNPTExBQiIsImlhdCI6MTczNDMzNzE2MiwiZXhwIjoxNzM0MzQwMTYyfQ.udM4wH2iZ1lPaAbprYaNapak12DqrPMnxSO1uJJlvQg",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3001/course",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Course Enroll",
+					"item": [
+						{
+							"name": "getAll",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiTEVBMjM0ODk0IiwidXNlclJvbGUiOiJMRUFSTkVSIiwiaWF0IjoxNzM0Mzc5NDA4LCJleHAiOjE3MzQzODI0MDh9.VacbazraPkF7U5f9DNoEXHeC_VjkRqTD-yBFmW4BOnA",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/course/enroll/LEA234894",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"enroll",
+										"LEA234894"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "enroll",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiTEVBMjM0ODk0IiwidXNlclJvbGUiOiJMRUFSTkVSIiwiaWF0IjoxNzM0Mzc5NDA4LCJleHAiOjE3MzQzODI0MDh9.VacbazraPkF7U5f9DNoEXHeC_VjkRqTD-yBFmW4BOnA",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"learnerID\": \"LEA234894\",\n    \"courseID\": \"COU121241\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/course/enroll",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"enroll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiTEVBMjM0ODk0IiwidXNlclJvbGUiOiJMRUFSTkVSIiwiaWF0IjoxNzM0Mzc5NDA4LCJleHAiOjE3MzQzODI0MDh9.VacbazraPkF7U5f9DNoEXHeC_VjkRqTD-yBFmW4BOnA",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3001/course/enroll/LEA234894/COU687786",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course",
+										"enroll",
+										"LEA234894",
+										"COU687786"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteAll Copy",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiVVIxODI1NTAiLCJ1c2VyUm9sZSI6IkNPTExBQiIsImlhdCI6MTczNDMzNzE2MiwiZXhwIjoxNzM0MzQwMTYyfQ.udM4wH2iZ1lPaAbprYaNapak12DqrPMnxSO1uJJlvQg",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3001/course",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"course"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "getAll",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSODUyMTc4IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzODU5ODk0LCJleHAiOjE3MzM4NjI4OTR9.HpVVqOaIAh9Tg7mtIaFRsD0mSyMVEm5LjSli8L_S5q8",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -175,14 +540,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/course",
+							"raw": "http://localhost:3001/course/public",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3001",
 							"path": [
-								"course"
+								"course",
+								"public"
 							]
 						}
 					},
@@ -195,13 +561,13 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSMzIwNTYwIiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTIwMzAyLCJleHAiOjE3MzM5MjMzMDJ9.9lCs4QeEpDIImMIquUXtwFJ1cT7w49GxHsw3jXS4Cgk",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiQ09MMjk1NzgxIiwidXNlclJvbGUiOiJDT0xMQUIiLCJpYXQiOjE3MzQzNzk0NDcsImV4cCI6MTczNDM4MjQ0N30.hMODRXIfCe5K0vV2GQGOkTgjWfeYj3dpJKveGq8HY8o",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"authorID\": \"UR760484\",\n    \"imageUrl\": \"img\",\n    \"courseName\": \"math\",\n    \"description\": \"noo\",\n    \"category\": \"none\",\n    \"price\": \"10\"\n}",
+							"raw": "{\n    \"authorID\": \"COL295781\",\n    \"imageUrl\": \"img\",\n    \"courseName\": \"math\",\n    \"description\": \"noo\",\n    \"category\": \"MATH\",\n    \"price\": \"10\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -209,14 +575,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/course",
+							"raw": "http://localhost:3001/course/public",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3001",
 							"path": [
-								"course"
+								"course",
+								"public"
 							]
 						}
 					},
@@ -234,7 +601,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/course/CO539345",
+							"raw": "http://localhost:3001/course/public/CO539345",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -242,6 +609,7 @@
 							"port": "3001",
 							"path": [
 								"course",
+								"public",
 								"CO539345"
 							]
 						}
@@ -254,7 +622,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3001/course/CO504216?authorization=Bearer Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSODUyMTc4IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzODU5ODk0LCJleHAiOjE3MzM4NjI4OTR9.HpVVqOaIAh9Tg7mtIaFRsD0mSyMVEm5LjSli8L_S5q8",
+							"raw": "http://localhost:3001/course/public/CO504216",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -262,13 +630,8 @@
 							"port": "3001",
 							"path": [
 								"course",
+								"public",
 								"CO504216"
-							],
-							"query": [
-								{
-									"key": "authorization",
-									"value": "Bearer Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSODUyMTc4IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzODU5ODk0LCJleHAiOjE3MzM4NjI4OTR9.HpVVqOaIAh9Tg7mtIaFRsD0mSyMVEm5LjSli8L_S5q8"
-								}
 							]
 						}
 					},
@@ -281,19 +644,20 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlaGVoZSIsInVzZXJJRCI6IlVSNzYwNDg0IiwidXNlclJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTIyMjY0LCJleHAiOjE3MzM5MjUyNjR9.ZhIp_SNmCjeQZIH2p-poAR3v44uY1Ow2Huq51lD65N4",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRydW1wIiwidXNlcklEIjoiVVIxODI1NTAiLCJ1c2VyUm9sZSI6IkNPTExBQiIsImlhdCI6MTczNDMzNzE2MiwiZXhwIjoxNzM0MzQwMTYyfQ.udM4wH2iZ1lPaAbprYaNapak12DqrPMnxSO1uJJlvQg",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/course",
+							"raw": "http://localhost:3001/course/public",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3001",
 							"path": [
-								"course"
+								"course",
+								"public"
 							]
 						}
 					},

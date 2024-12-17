@@ -27,6 +27,12 @@ module.exports = (sequelize, DataTypes) => {
    },{
     sequelize,
     modelName: 'courseCollab',
+    indexes: [
+      {
+        unique: true,
+        fields: ['collabID', 'courseID'],
+      },
+    ],
   });
   return courseCollab;
 };

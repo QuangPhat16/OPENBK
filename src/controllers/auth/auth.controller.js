@@ -3,14 +3,14 @@ const DB = require('../../database/models')
 const User = DB.User
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { generateUserID } = require('../../utils/generateID')
+const { generateLearnerID } = require('../../utils/generateID')
 
 
 // sign up
 const signUp = async (req, res) => {
    try {
       const { name, email, password } = req.body
-      const userID = generateUserID()
+      const userID = generateLearnerID()
       const imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"
 
       const dupplicate = await User.findOne({ where: { email } })
@@ -35,7 +35,7 @@ const signUp = async (req, res) => {
       // store refresh token in cookies
       // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
-      const role = "USER"
+      const role = "LEARNER"
       res.status(200).json({userID, role, accessToken })
 
    } catch (err) {

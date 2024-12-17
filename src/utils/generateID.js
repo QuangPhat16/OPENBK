@@ -1,14 +1,19 @@
-const generateUserID = () => {
+const generateLearnerID = () => {
   const randomID = Math.floor(100000 + Math.random() * 900000);
-  return `UR${randomID}`;
+  return `LEA${randomID}`;
+};
+const generateCollabID = () => {
+  const randomID = Math.floor(100000 + Math.random() * 900000);
+  return `COL${randomID}`;
 };
 
 const generateCourseID = () => {
   const randomID = Math.floor(100000 + Math.random() * 900000); 
-  return `CO${randomID}`;
+  return `COU${randomID}`;
 };
 
 module.exports = {
-  generateUserID,
+  generateLearnerID,
+  generateCollabID,
   generateCourseID
 };
