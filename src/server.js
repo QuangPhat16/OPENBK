@@ -2,11 +2,10 @@ const express = require('express')
 const {sequelize} = require('./database/models')
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
-const verifyJWT = require('./middleware/verifyJWT')
 const app = express()
 
 const corsOptions = {
-   origin: true,
+   origin: "http://localhost:3000",
    methods: '*',
    allowedHeaders: ['Content-Type', 'Authorization'],
    credentials: true,

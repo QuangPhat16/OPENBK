@@ -5,11 +5,11 @@ module.exports = (sequelize) => {
       this.belongsToMany(models.Course, {
         through: models.Participate,
         foreignKey: 'learnerID',
-        as: 'learnerParticipates',
+        as: 'learnerInfo',
       });
       this.hasMany(models.Course, {
         foreignKey: 'authorID',
-        as: 'authorCourses',         
+        as: 'authorInfo',         
       });
     }
 

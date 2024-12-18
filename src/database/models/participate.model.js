@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     courseID: {
-      type: DataTypes.DATE, 
+      type: DataTypes.STRING, 
       references: {
         model: 'Course',
         key: 'courseID',
@@ -22,19 +22,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW,
     },
     status: {
-      type: DataTypes.ENUM('ENROLLED', 'COMPLETED', 'DROPPED'),
-      defaultValue: 'ENROLLED',
+      type: DataTypes.ENUM('ACTIVE', 'COMPLETED', 'DROPPED'),
+      defaultValue: 'ACTIVE',
     },
   }, {});
 
   Participate.associate = function (models) {
     Participate.belongsTo(models.User, { 
       foreignKey: 'learnerID',
-      as: 'learnerParticipates',
+      as: 'learnerInfo',
     });
     Participate.belongsTo(models.Course, { 
       foreignKey: 'courseID',
-      as: 'courseLearned',
+      as: 'courseInfo',
      });
   };
 

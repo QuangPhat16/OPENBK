@@ -18,25 +18,32 @@ const signUp = async (req, res) => {
 
       const hashpwd = await bcrypt.hash(password, 10)
 
-      const newUser = await User.create({ userID: userID, name, email, password: hashpwd, imageUrl })
+      const newUser = await User.create({ userID , name, email, password: hashpwd, imageUrl })
       // create access, refresh token
       const accessToken = jwt.sign(
          { name: newUser.name, id: newUser.id, role: newUser.role },
          process.env.ACCESS_TOKEN_SECRET,
-         { expiresIn: '3000s' }
-      )
-
-      const refreshToken = jwt.sign(
-         { name: newUser.name, id: newUser.id, role: newUser.role },
-         process.env.REFRESH_TOKEN_SECRET,
          { expiresIn: '1d' }
       )
+
+      // const refreshToken = jwt.sign(
+      //    { name: newUser.name, id: newUser.id, role: newUser.role },
+      //    process.env.REFRESH_TOKEN_SECRET,
+      //    { expiresIn: '1d' }
+      // )
+
+      res.cookie('accessToken', accessToken, {
+         httpOnly: true,   
+         secure: true,
+         maxAge: 24 * 60 * 60 * 1000,
+         sameSite: 'None'
+      })
 
       // store refresh token in cookies
       // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
       const role = "LEARNER"
-      res.status(200).json({userID, role, accessToken })
+      res.status(200).json({userID, role, message: 'Register successfully!'})
 
    } catch (err) {
       res.status(500).json({ err })
@@ -57,21 +64,28 @@ const logIn = async (req, res) => {
       const accessToken = jwt.sign(
          { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
          process.env.ACCESS_TOKEN_SECRET,
-         { expiresIn: '3000s' }
-      )
-   
-      const refreshToken = jwt.sign(
-         { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
-         process.env.REFRESH_TOKEN_SECRET,
          { expiresIn: '1d' }
       )
+   
+      // const refreshToken = jwt.sign(
+      //    { "username": existUser.name, "userID": existUser.userID, "userRole": existUser.role },
+      //    process.env.REFRESH_TOKEN_SECRET,
+      //    { expiresIn: '1d' }
+      // )
+
+      res.cookie('accessToken', accessToken, {
+         httpOnly: true,   
+         secure: true, 
+         maxAge: 24 * 60 * 60 * 1000,
+         sameSite: 'None'
+      })
 
       // store refresh token in cookies
       // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
       // pass accessToken to frontend (client-side) for later API calls
       const userID = existUser.userID
       const role = existUser.role
-      res.status(200).json({ userID, role, accessToken })
+      res.status(200).json({ userID, role, message: 'Login successfully!' })
 
    } catch (err) {
       return res.status(500).json({ err })

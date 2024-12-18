@@ -22,7 +22,7 @@ router.delete('/', deleteAllUsers)
 router.post('/', createUser)
 
 
-// router.use(verifyJWT)
+router.use(verifyJWT)
 
 router.get('/', getAllUsers)
 

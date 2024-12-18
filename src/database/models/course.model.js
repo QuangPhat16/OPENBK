@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.User, {
         through: models.Participate,
         foreignKey: 'courseID',
-        as: 'courseLearned',
+        as: 'courseInfo',
       });
       this.belongsTo(models.User, {
         foreignKey: 'authorID',
-        as: 'authorCourses',
+        as: 'authorInfo',
       });
     }
   }

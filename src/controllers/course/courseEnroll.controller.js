@@ -1,22 +1,59 @@
-const { Participate, Course } = require('../../database/models');
+const { User, Participate, Course } = require('../../database/models');
+const { Sequelize } = require('sequelize');
+const { use } = require('../../routes');
+
 
 const courseEnroll = {
    async getEnrolledCourses (req, res) {
       try {
          const { learnerID } = req.params;
-         console.log(learnerID)
+         const learner = await User.findOne({
+            where: {
+               userID: learnerID,
+            },
+         });
+         if (!learner) {
+            return res.status(404).json({ error: 'Learner not found' });
+         }
+
          const enrolledCourses = await Participate.findAll({
             where: {
                learnerID,
             },
             include: [
-            { model: Course, as: 'courseLearned', attributes: ['courseName'] },
+               {
+                  model: Course,
+                  as: 'courseInfo',
+                  attributes: [
+                     'courseName', 
+                     'description', 
+                     'imageUrl',
+                  ],
+                  include: [
+                     {
+                        model: User,
+                        as: 'authorInfo',
+                        attributes: ['name', 'imageUrl'],
+                     },
+                  ],
+               },
             ],
          });
 
          if (enrolledCourses.length === 0) {
             return res.status(404).json({ error: 'No enrolled courses founded' });
          }
+
+         // const enrolledCoursesWithAuthor = enrolledCourses.map(participate => {
+         //    const course = participate.courseInfo;
+         //    const author = course.authorInfo;
+         //    return {
+         //       ...course,
+         //       authorName: author.name,
+         //       authorImg: author.imageUrl,
+         //       authorInfo: undefined,
+         //    };
+         // });
 
          return res.status(200).json( enrolledCourses );
       } catch (err) {
@@ -27,14 +64,30 @@ const courseEnroll = {
    async enrollCourse (req, res) {
       try {
          const { learnerID, courseID } = req.body;
-         console.log(learnerID, courseID)
+         const learner = await User.findOne({
+            where: {
+               userID: learnerID,
+            },
+         });
+         if (!learner) {
+            return res.status(404).json({ error: 'Learner not found' });
+         }
+
+         const course = await Course.findOne({
+            where: {
+               courseID,
+            },
+         });
+         if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+         }
+
          const existingEnrollment = await Participate.findOne({
             where: {
                learnerID,
                courseID,
             },
          });
-
          if (existingEnrollment) {
             return res.status(400).json({ error: 'User is already enrolled in this course' });
          }

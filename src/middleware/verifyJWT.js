@@ -4,10 +4,9 @@ const jwt = require('jsonwebtoken')
 
 //verify JWT// middleware for veryfing JWT
 const verifyJWT = (req, res, next) => {
-   const authHeader = req.headers['authorization'];
+   const token = req.cookies.accessToken;
    
-   if (authHeader) {
-      const token = authHeader.split(' ')[1];
+   if (token) {
 
       jwt.verify(
          token,
@@ -22,7 +21,7 @@ const verifyJWT = (req, res, next) => {
                   id: decoded.id,
                   role: decoded.role
                };
-               next(); // Proceed to the next middleware or route
+               next(); 
             }
          }
       );

@@ -44,11 +44,11 @@ const CourseController = {
   async getAllCourses(req, res) {
     try {
       const courses = await Course.findAll({
-          // include: {
-          //   model: User,
-          //   as: 'author',
-          //   attributes: ['name']
-          // }
+          include: {
+            model: User,
+            as: 'authorInfo',
+            attributes: ['name', 'imageUrl'],
+          }
         });
       if(!courses) return res.status(404).json({message:'No course is found'}) 
       res.status(200).json( courses);
