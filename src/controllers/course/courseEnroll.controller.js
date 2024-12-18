@@ -28,6 +28,8 @@ const courseEnroll = {
                      'courseName', 
                      'description', 
                      'imageUrl',
+                     'category',
+                     'price',
                   ],
                   include: [
                      {
@@ -39,23 +41,31 @@ const courseEnroll = {
                },
             ],
          });
+         
 
          if (enrolledCourses.length === 0) {
             return res.status(404).json({ error: 'No enrolled courses founded' });
          }
+         const flatCourses = enrolledCourses.map(enrolled => {
+            const course = enrolled.courseInfo;
+      
+            return {
+              learnerID: enrolled.learnerID,
+              courseID: enrolled.courseID,
+              enrollmentDate: enrolled.enrollmentDate,
+              status: enrolled.status,
+              createdAt: enrolled.createdAt,
+              updatedAt: enrolled.updatedAt,
+              courseName: course.courseName,
+              description: course.description,
+              imageUrl: course.imageUrl,
+              category: course.category,
+              price: course.price,
+              authorInfo: course.authorInfo,
+            };
+          });
 
-         // const enrolledCoursesWithAuthor = enrolledCourses.map(participate => {
-         //    const course = participate.courseInfo;
-         //    const author = course.authorInfo;
-         //    return {
-         //       ...course,
-         //       authorName: author.name,
-         //       authorImg: author.imageUrl,
-         //       authorInfo: undefined,
-         //    };
-         // });
-
-         return res.status(200).json( enrolledCourses );
+         return res.status(200).json( flatCourses );
       } catch (err) {
          console.error(err);
          return res.status(500).json({ error: err.message });
