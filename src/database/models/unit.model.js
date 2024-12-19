@@ -3,44 +3,50 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Unit extends Model {
     static associate(models) {
-      this.belongsTo(models.Course, { foreignKey: 'courseID', as: 'course'  });
-      this.hasMany(models.Question, { foreignKey: 'unitID', as: 'questions' });
+      this.belongsTo(models.Course, { foreignKey: 'courseID', as: 'course_units', onDelete: 'CASCADE' });
+      this.hasMany(models.Question, { foreignKey: 'unitID', as: 'unit_questions' });
     }
   }
 
   Unit.init({
     unitID: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+    },
+    courseID: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      references: {
+        model: 'Course',
+        key: 'courseID',
+      },
+    },
+    numericalOrder: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     unitName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    numericalOrder: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      // autoIncrement: true,
-      unique: true,
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
-    courseID: {
-      type: DataTypes.STRING,
-      references: {
-        model: 'Course',
-        key: 'courseID',
-      },
+    numberOfQuestions: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
       allowNull: false,
     },
   }, {
     sequelize,
     modelName: 'Unit',
-  });
-  Unit.beforeCreate(async (unit, options) => {
-    const maxOrder = await Unit.max('numericalOrder', {
-      where: { courseID: unit.courseID },
-    });
-    unit.numericalOrder = (maxOrder || 0) + 1;
+    indexes: [{
+      unique: true,
+      fields: ['courseID', 'numericalOrder'],
+      msg: 'Unit with this order already exists.',
+    }]
   });
 
   return Unit;

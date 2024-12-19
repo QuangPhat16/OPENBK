@@ -1,16 +1,27 @@
-const { Unit } = require('../../database/models');
+const { Unit, Course } = require('../../database/models');
+const { generateUnitID } = require('../../utils/generateID');
+const {filterNull, checkNull} = require('../../common/ultis');
 
 const UnitController = {
     async createUnit(req, res) {
         try {
             const { courseID } = req.params;
-            const { unitName } = req.body;
+            const { numericalOrder, unitName, description } = req.body;
 
             const course = await Course.findByPk(courseID);
             if (!course) return res.status(404).json({ error: 'Course not found' });
+            
+            const unitID = generateUnitID(courseID);
 
-            await Unit.create({ unitName, courseID });
-            return res.status(201).json({ message: 'Created unit successfully' });
+            const fieldsToCreate = filterNull({
+                unitID,
+                courseID,
+                numericalOrder,
+                unitName,
+                description
+            });
+            await Unit.create(fieldsToCreate);
+            return res.status(201).json({ unitID, message: 'Created unit successfully' });
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }
@@ -20,7 +31,7 @@ const UnitController = {
         try {
             const { courseID } = req.params;
             const units = await Unit.findAll(
-                { where: { courseID, } }
+                { where: { courseID } }
             );
             return res.status(200).json(units);
 
@@ -29,26 +40,29 @@ const UnitController = {
         }
     },
   
-    // async getUnitByID(req, res) {
-    //     try {
-    //         const { courseID, id } = req.params;
-    //         if (isNaN(parseInt(courseID)) || isNaN(parseInt(id))) return res.status(400).json({ error: 'ID must be a number' });
-    //         const unit = await Unit.findByPk(id, {
-    //         where: { courseID },
-    //         });
-    //         if (!unit) return res.status(404).json({ error: 'Unit not found' });
-    //         res.status(200).json(unit);
-    //     } catch (error) {
-    //         res.status(500).json({ error: error.message });
-    //     }
-    // },
+    async getUnitByID(req, res) {
+        try {
+            const { unitID } = req.params;
+
+            const unit = await Unit.findOne({
+                where: {
+                    unitID
+                }
+            });
+            if (!unit) return res.status(404).json({ error: 'Unit not found' });
+            res.status(200).json(unit);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
   
     async updateUnit(req, res) {
         try {
-            const { unitName, numericalOrder, unitID } = req.body;
+            const { unitID } = req.params;
+            const { unitName, description } = req.body;
             const updated = await Unit.update(
-                { unitName, numericalOrder },
-                { where: { unitID,}, }
+                { unitName, description },
+                { where: { unitID } }
             );
             if (!updated[0]) return res.status(404).json({ error: 'Unit not found' });
             return res.status(200).json({ message: 'Unit updated successfully' });
@@ -60,8 +74,12 @@ const UnitController = {
   
     async deleteUnit(req, res) {
         try {
-            const unitID = req.body
-            const deleted = await Unit.destroy({ where: { unitID, }, });
+            const { unitID } = req.params;
+            const deleted = await Unit.destroy({
+                where: {
+                    unitID
+                }
+            });
             if (!deleted) return res.status(404).json({ error: 'Unit not found' });
             return res.status(200).json({ message: 'Unit deleted successfully' });
 

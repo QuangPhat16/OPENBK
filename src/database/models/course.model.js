@@ -4,7 +4,7 @@ const { Model  } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
     static associate(models) {
-      this.hasMany(models.Unit, { foreignKey: 'courseID', as: 'units' });
+      this.hasMany(models.Unit, { foreignKey: 'courseID', as: 'course_units' });
       this.hasOne(models.Preview, { foreignKey: 'userID', as: 'preview' });
       this.belongsToMany(models.User, {
         through: models.Participate,
@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: 'authorID',
         as: 'authorInfo',
+        onDelete: 'CASCADE',
       });
     }
   }
@@ -21,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
   Course.init({
     courseID: {
       type: DataTypes.STRING,
-      unique: true,
       primaryKey: true,
       allowNull: false,
     },
@@ -39,17 +39,20 @@ module.exports = (sequelize, DataTypes) => {
     },
     imageUrl: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
     },
     category: {
-      type: DataTypes.ENUM('MATH', 'ENGLISH', 'CODE', 'ART'),
+      type: DataTypes.ENUM('MATH', 'ENGLISH', 'CODE', 'ART', 'NONE'),
+      defaultValue: 'NONE',
       allowNull: false,
     },
     price:{
       type: DataTypes.STRING,
-      defaultValue: 'Free'
+      defaultValue: 'Free',
+      allowNull: false
     },
   }, {
     sequelize,

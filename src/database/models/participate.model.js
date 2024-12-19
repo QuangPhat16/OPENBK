@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         model: 'User',
         key: 'userID',
       },
+      primaryKey: true,
       allowNull: false,
     },
     courseID: {
@@ -15,11 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Course',
         key: 'courseID',
       },
+      primaryKey: true,
       allowNull: false,
-    },
-    enrollmentDate: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
     },
     status: {
       type: DataTypes.ENUM('ACTIVE', 'COMPLETED', 'DROPPED'),
@@ -31,10 +29,12 @@ module.exports = (sequelize, DataTypes) => {
     Participate.belongsTo(models.User, { 
       foreignKey: 'learnerID',
       as: 'learnerInfo',
+      onDelete: 'CASCADE',
     });
     Participate.belongsTo(models.Course, { 
       foreignKey: 'courseID',
       as: 'courseInfo',
+      onDelete: 'CASCADE',
      });
   };
 

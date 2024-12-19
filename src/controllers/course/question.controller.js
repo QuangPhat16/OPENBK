@@ -1,19 +1,39 @@
-const { Question } = require('../../database/models');
+const { Unit, Question } = require('../../database/models');
+const { generateQuestionID } = require('../../utils/generateID');
 const {filterNull, checkNull} = require('../../common/ultis');
 
 
 const QuestionController = {
     async createQuestion(req, res) {
         try {
-            const { courseID } = req.params;
-            const { content, explanation, unitID, correctAnswer, answerA, answerB, answerC, answerD } = req.body;
-            if(checkNull({ content, unitID, answerA, answerB, answerC, answerD })) return res.status(400).json({message: 'Bad request, some fileds are missing'})
+            const { unitID } = req.params;
 
-            const course = await Question.findOne({ where: { courseID } });
-            if (!course) return res.status(404).json({ error: 'Course not found' });
+            const { numericalOrder, content, explanation, correctAnswer, answerA, answerB, answerC, answerD } = req.body;
+            if(checkNull({ numericalOrder, content, answerA, answerB, answerC, answerD })) return res.status(400).json({message: 'Bad request, some fileds are missing'})
 
-            await Question.create({courseID, content, explanation, unitID, correctAnswer, answerA, answerB, answerC, answerD });
-            res.status(201).json({message:'Created question successfully'});
+            const unit = await Unit.findOne({
+                where: {
+                    unitID
+                }
+            });
+            if (!unit) return res.status(404).json({ error: 'Unit not found' });
+
+            const questionID = generateQuestionID(unitID);
+            const filterCreate = filterNull({ 
+                questionID, 
+                unitID,
+                numericalOrder, 
+                content, 
+                explanation, 
+                correctAnswer, 
+                answerA, 
+                answerB, 
+                answerC, 
+                answerD 
+            });
+            
+            await Question.create(filterCreate);
+            res.status(201).json({ questionID, message:'Created question successfully'});
 
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -22,10 +42,15 @@ const QuestionController = {
   
     async getAllQuestions(req, res) {
         try {
-            const { courseID } = req.params;
-            const unitID = req.body
+            const { unitID } = req.params;
+            const unit = await Unit.findOne({
+                where: {
+                    unitID
+                }
+            });
+            if (!unit) return res.status(404).json({ error: 'Unit not found' });
             const questions = await Question.findAll(
-                { where: { courseID, unitID } }
+                { where: { unitID } }
             );
             res.status(200).json(questions);
 
@@ -34,27 +59,28 @@ const QuestionController = {
         }
     },
   
-    // async getQuestionByID(req, res) {
-    //     try {
-    //         const { courseID, unitID, id } = req.params;
-    //         const question = await Question.findByPk(id, {
-    //             where: { courseID, unitID },
-    //         });
-    //         if (!question) return res.status(404).json({ error: 'Question not found' });
-    //         res.status(200).json(question);
-    //     } catch (error) {
-    //         res.status(500).json({ error: error.message });
-    //     }
-    // },
+    async getQuestionByID(req, res) {
+        try {
+            const { questionID } = req.params;
+            const question = await Question.findOne({
+                where: { questionID },
+            });
+            if (!question) return res.status(404).json({ error: 'Question not found' });
+            res.status(200).json(question);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
   
     async updateQuestion(req, res) {
         try {
-            const { questionID, content, explanation, correctAnswer, answerA, answerB, answerC, answerD } = req.body;
+            const { questionID } = req.params;
+            const { content, explanation, correctAnswer, answerA, answerB, answerC, answerD } = req.body;
             const params = filterNull({ content, explanation, correctAnswer, answerA, answerB, answerC, answerD })
             
             const updated = await Question.update(
                 params,
-                { where: { questionID, }, }
+                { where: { questionID }, }
             );
 
             if (!updated[0]) return res.status(404).json({ message: 'Question not found' });
@@ -67,11 +93,12 @@ const QuestionController = {
   
     async deleteQuestion(req, res) {
         try {
-            const questionID = req.body
-            const deleted = await Question.destroy({ where: { questionID, }, });
+            const { questionID } = req.params;
+
+            const deleted = await Question.destroy({ where: { questionID } });
             if (!deleted) return res.status(404).json({ message: 'Question not found' });
             res.status(200).json({ message: 'Question deleted successfully' });
-
+            
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

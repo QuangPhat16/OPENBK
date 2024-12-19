@@ -3,43 +3,6 @@ const {filterNull, checkNull} = require('../../common/ultis');
 const { generateCourseID } = require('../../utils/generateID');
 
 const CourseController = {
-  async createCourse(req, res) {
-    try {
-      const { authorID, courseName, image, category, description, price } = req.body;
-      
-      const imageUrl = "https://t4.ftcdn.net/jpg/07/77/57/53/360_F_777575393_rZskmeQsWOY8TXBjwjcyBOHamOQfZyHs.jpg";
-
-      if (checkNull({ authorID, courseName, imageUrl, category, description, price })) {
-        return res.status(400).json({ message: 'Course creation failed, some fields are missing' });
-      }
-
-      const author = await User.findOne({ where: { userID: authorID } });
-      if (!author) {
-        return res.status(404).json({ message: 'Author not found' });
-      }
-
-      if (author.role !== 'COLLAB') {
-        return res.status(403).json({ message: 'You do not have permission to create a course, role must be COLLAB' });
-      }
-
-      await Course.create({
-        courseID: generateCourseID(),
-        authorID,
-        courseName,
-        imageUrl,
-        category,
-        description,
-        price
-      });
-
-      return res.status(201).json({ message: 'Course creation is successful' });
-
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  },
-
-
 
   async getAllCourses(req, res) {
     try {
@@ -144,7 +107,6 @@ const CourseController = {
     }
   },
 };
-
 
 
 module.exports = CourseController

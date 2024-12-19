@@ -8,7 +8,6 @@ router.get('/', CourseController.getAllCourses);
 router.get('/:courseID', CourseController.getCourseById);
 
 router.use(verifyJWT)
-router.post('/', CourseController.createCourse);
 router.put('/:courseID', CourseController.updateCourse);
 router.delete('/:courseID', CourseController.deleteCourse);
 router.delete('/', CourseController.deleteAllCourses);
