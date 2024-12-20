@@ -92,7 +92,24 @@ const logIn = async (req, res) => {
    }
 }
 
+const logOut = async (req, res) => {
+   try {
+      // Xóa cookie chứa accessToken
+      res.clearCookie('accessToken', {
+         httpOnly: true,
+         secure: true,
+         sameSite: 'None',
+      })
+
+      res.status(200).json({ message: 'Logged out successfully!' })
+   } catch (err) {
+      res.status(500).json({ error: 'Error during logout', err })
+   }
+}
+
+
 module.exports = {
    signUp,
-   logIn
+   logIn,
+   logOut
 }

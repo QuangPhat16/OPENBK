@@ -23,13 +23,20 @@ const CourseController = {
   async getCourseById(req, res) {
     try {
       const { courseID } = req.params
-      const courses = await Course.findOne({where: { courseID } });
-      if(!courses) return res.status(404).json({message:'No course is found'}) 
-      res.status(200).json(courses);
+      const course = await Course.findOne({where: { courseID },
+        include: {
+          model: User,
+          as: 'authorInfo',
+          attributes: ['name', 'imageUrl'],
+        }
+      });
+      if(!course) return res.status(404).json({message:'No course is found'}) 
+      res.status(200).json(course);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+
 
   async updateCourse(req, res) {
     try {

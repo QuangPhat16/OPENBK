@@ -41,7 +41,14 @@ module.exports = (sequelize) => {
     },
     imageUrl: {
       type: DataTypes.STRING,
-    }
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+    },
+    biography: {
+      type: DataTypes.STRING,
+    },
+
   }, {
     sequelize,
     modelName: 'User',

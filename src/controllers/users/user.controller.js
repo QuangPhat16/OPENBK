@@ -2,6 +2,7 @@ const { User, Course } = require('../../database/models')
 const bcrypt = require('bcrypt')
 const { deleteCourse } = require('../course/course.controller')
 const { generateCollabID } = require('../../utils/generateID')
+const { filterNull, checkNull } = require('../../common/ultis')
 
 //get user info
 const getUserInfo = async (req, res) => {
@@ -81,13 +82,20 @@ const deleteAllUsers = async (req, res) => {
 //User change their info
 //Still cannot validate input
 const updateUserInfo = async (req, res) => {
-   const { name, email, password } = req.body
+   const { name, email, password, phoneNumber, biography } = req.body
    const id = req.user.id
    try {
       const updateUser = await User.findByPk(id)
       if (!updateUser) return res.status(404).json({ message: 'Updated fail, no user not found' })
-      const hashpwd = await bcrypt.hash(password, 10)
-      await User.update({ name, email, password: hashpwd }, { where: { id } })
+      
+      const fieldsToUpdate = filterNull({ name, email, phoneNumber, biography });
+
+      if (password) {
+         const hashpwd = await bcrypt.hash(password, 10)
+         fieldsToUpdate.password = hashpwd;
+      }
+      
+      await User.update(fieldsToUpdate, { where: { id } })
       return res.json({ message: 'Update user information successfully' })
    } catch (err) {
       console.error(`${err}`);

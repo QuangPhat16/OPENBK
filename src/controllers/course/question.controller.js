@@ -9,13 +9,9 @@ const QuestionController = {
             const { unitID } = req.params;
 
             const { numericalOrder, content, explanation, correctAnswer, answerA, answerB, answerC, answerD } = req.body;
-            if(checkNull({ numericalOrder, content, answerA, answerB, answerC, answerD })) return res.status(400).json({message: 'Bad request, some fileds are missing'})
+            if(checkNull({ numericalOrder, content, answerA, answerB, answerC, answerD })) return res.status(400).json({message: 'Bad request, some fields are missing'})
 
-            const unit = await Unit.findOne({
-                where: {
-                    unitID
-                }
-            });
+            const unit = await Unit.findByPk(unitID);
             if (!unit) return res.status(404).json({ error: 'Unit not found' });
 
             const questionID = generateQuestionID(unitID);
@@ -33,6 +29,7 @@ const QuestionController = {
             });
             
             await Question.create(filterCreate);
+            await Unit.increment('numberOfQuestions', {where: { unitID }});
             res.status(201).json({ questionID, message:'Created question successfully'});
 
         } catch (error) {
@@ -95,10 +92,16 @@ const QuestionController = {
         try {
             const { questionID } = req.params;
 
-            const deleted = await Question.destroy({ where: { questionID } });
-            if (!deleted) return res.status(404).json({ message: 'Question not found' });
+            const question = await Question.findByPk(questionID);
+            if (!question) return res.status(404).json({ error: 'Question not found' });
+
+            const unit = await Unit.findByPk(question.unitID);
+            if (!unit) return res.status(404).json({ error: 'Unit not found' });
+
+            await Question.destroy({ where: { questionID } });
+            await Unit.decrement('numberOfQuestions', {where: { unitID: question.unitID }});
             res.status(200).json({ message: 'Question deleted successfully' });
-            
+
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

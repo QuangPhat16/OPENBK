@@ -6,7 +6,7 @@ const CourseCollab = {
   async createCourse(req, res) {
     try {
       const { authorID, courseName, image, category, description, price } = req.body;
-      
+      console.log(authorID, courseName, image, category, description, price); 
       const imageUrl = "https://t4.ftcdn.net/jpg/07/77/57/53/360_F_777575393_rZskmeQsWOY8TXBjwjcyBOHamOQfZyHs.jpg";
 
 
